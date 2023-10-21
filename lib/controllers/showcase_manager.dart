@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import '../models/product.dart';
 import '../models/supplier.dart';
 
 class ShowcaseManager extends ChangeNotifier{
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   final List<Product> _productsList = [];
 
@@ -34,5 +37,13 @@ class ShowcaseManager extends ChangeNotifier{
   void removeProduct(Product product){
     _productsList.remove(product);
     notifyListeners();
+  }
+  
+  void getCloudProducts() async {
+    var allDocs = await _firestore.collection('produtos').get();
+
+    for(var doc in allDocs.docs){
+      print(doc);
+    }
   }
 }

@@ -4,10 +4,11 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:app_jms/models/product.dart';
 import 'package:provider/provider.dart';
 import '../components/product_list_tile.dart';
-import 'add_product_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
+
+  static const String id = '/main'; //TODO create other initial route
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -28,6 +29,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          Provider.of<ShowcaseManager>(context, listen: false).getCloudProducts();
           Navigator.pushNamed(context, '/add');
         },
         child: const Icon(

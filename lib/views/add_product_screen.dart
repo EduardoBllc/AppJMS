@@ -8,6 +8,8 @@ import 'package:intl/intl.dart';
 class AddProductScreen extends StatefulWidget {
   const AddProductScreen({super.key});
 
+  static const String id = '/add';
+
   @override
   State<AddProductScreen> createState() => _AddProductScreenState();
 }
@@ -21,7 +23,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('App Janete Semijoias'),
+        title: const Text('App Janete Semijoias'),
       ),
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
@@ -32,9 +34,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
               height: MediaQuery.sizeOf(context).height * 0.82,
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 30),
-                    child: const Text(
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 30),
+                    child: Text(
                       'Cadastro de Produto',
                       style: TextStyle(
                         fontSize: 20,
@@ -92,8 +94,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               ],
                             ),
                           ),
-                          Expanded(
-                            child: const Row(
+                          const Expanded(
+                            child: Row(
                               children: [
                                 TextProductFormField(labelText: 'Custo'),
                                 TextProductFormField(labelText: 'A vista'),
@@ -166,7 +168,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: ElevatedButton(onPressed: () {}, child: Text('Cadastrar')),
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: const Text('Cadastrar'),
+                    ),
                   )
                 ],
               ),
