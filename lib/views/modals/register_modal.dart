@@ -1,6 +1,5 @@
 import 'package:app_jms/components/log_in_field.dart';
 import 'package:app_jms/constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
