@@ -139,8 +139,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           TextButton(
                             onPressed: () {},
                             child: Container(
-                              margin: EdgeInsets.only(top: 20),
-                              padding: EdgeInsets.symmetric(
+                              margin: const EdgeInsets.only(top: 20),
+                              padding: const EdgeInsets.symmetric(
                                   vertical: 10, horizontal: 40),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
