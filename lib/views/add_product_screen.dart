@@ -1,9 +1,11 @@
+import 'package:app_jms/constants.dart';
 import 'package:app_jms/controllers/showcase_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../components/product_form_fields.dart';
 import '../models/product.dart';
 import 'package:intl/intl.dart';
+import 'package:date_field/date_field.dart';
 
 class AddProductScreen extends StatefulWidget {
   const AddProductScreen({super.key});
@@ -16,169 +18,174 @@ class AddProductScreen extends StatefulWidget {
 
 class _AddProductScreenState extends State<AddProductScreen> {
   final GlobalKey _productFormKey = GlobalKey<FormState>();
-  final TextEditingController _boughtDateController = TextEditingController();
   final DateFormat dateFormatter = DateFormat('dd/MM/yyyy');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('App Janete Semijoias'),
+        title: const Text('JM Semijoias'),
       ),
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _productFormKey,
-            child: SizedBox(
-              height: MediaQuery.sizeOf(context).height * 0.82,
+      body: SafeArea(
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: SingleChildScrollView(
+            child: Container(
+              constraints: BoxConstraints.expand(
+                height: MediaQuery.sizeOf(context).height * 0.9,
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 30),
-                    child: Text(
-                      'Cadastro de Produto',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  const Text(
+                    'Cadastro de Produtos',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      height: MediaQuery.sizeOf(context).height * 0.65,
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                  Container(
+                    constraints: BoxConstraints.expand(
+                      height: MediaQuery.sizeOf(context).height * 0.75,
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Form(
+                      key: _productFormKey,
                       child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           const TextProductFormField(
                             labelText: 'Descrição',
                             hintText: 'Breve descrição da peça',
+                            icon: Icon(Icons.text_fields_outlined),
                           ),
-                          Expanded(
-                            child: Row(
-                              children: [
-                                DropdownProductFormField(
-                                  labelText: 'Categoria',
-                                  list: Category.values,
-                                  flex: 4,
-                                  onChanged: (value) {},
-                                ),
-                                DropdownProductFormField(
-                                  labelText: 'Metal',
-                                  list: Metal.values,
-                                  flex: 4,
-                                  onChanged: (value) {},
-                                ),
-                                DropdownProductFormField(
-                                  labelText: 'Modalidade',
-                                  list: Modality.values,
-                                  flex: 5,
-                                  onChanged: (value) {},
-                                ),
-                              ],
+                          DoubleFieldRow(
+                            child1: DropdownProductFormField(
+                              labelText: 'Categoria',
+                              list: Category.values,
+                              icon: const Icon(Icons.category_outlined),
+                              onChanged: (value) {},
+                            ),
+                            child2: DropdownProductFormField(
+                              labelText: 'Metal',
+                              list: Metal.values,
+                              icon: const Icon(Icons.texture_outlined),
+                              onChanged: (value) {},
                             ),
                           ),
-                          Expanded(
-                            child: Row(
-                              children: [
-                                DropdownProductFormField(
-                                  labelText: 'Fábrica',
-                                  list: Provider.of<ShowcaseManager>(context)
-                                      .supplierList,
-                                  onChanged: (value) {},
-                                ),
-                                const TextProductFormField(
-                                  flex: 2,
-                                  labelText: 'Código da Fábrica',
-                                ),
-                              ],
+                          DoubleFieldRow(
+                            child1: DropdownProductFormField(
+                              labelText: 'Modalidade',
+                              list: Modality.values,
+                              icon: const Icon(Icons.family_restroom_outlined),
+                              flex: 5,
+                              onChanged: (value) {},
+                            ),
+                            child2: DropdownProductFormField(
+                              icon: const Icon(Icons.factory_outlined),
+                              labelText: 'Fábrica',
+                              list: Provider.of<ShowcaseManager>(context)
+                                  .supplierList,
+                              onChanged: (value) {},
                             ),
                           ),
-                          const Expanded(
-                            child: Row(
-                              children: [
-                                TextProductFormField(labelText: 'Custo'),
-                                TextProductFormField(labelText: 'A vista'),
-                                TextProductFormField(labelText: 'A prazo'),
-                              ],
+                          const DoubleFieldRow(
+                            child1: TextProductFormField(
+                              flex: 2,
+                              labelText: 'Código Fábrica',
+                              icon: Icon(Icons.vpn_key),
+                            ),
+                            child2: TextProductFormField(
+                              labelText: 'Custo',
+                              icon: Icon(Icons.attach_money_outlined),
                             ),
                           ),
-                          Expanded(
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.date_range,
-                                      color: Colors.blue,
-                                    ),
-                                    onPressed: () async {
-                                      _boughtDateController.text =
-                                          await showDatePicker(
-                                        context: context,
-                                        initialDate: DateTime.now(),
-                                        firstDate: DateTime.now()
-                                            .subtract(const Duration(days: 60)),
-                                        lastDate: DateTime.now(),
-                                      ).then((value) {
-                                        return dateFormatter.format(value!);
-                                      });
-                                    },
+                          const DoubleFieldRow(
+                            child1: TextProductFormField(
+                              labelText: 'A vista',
+                              icon: Icon(
+                                Icons.payments_outlined,
+                              ),
+                            ),
+                            child2: TextProductFormField(
+                              labelText: 'A prazo',
+                              icon: Icon(Icons.credit_card_outlined),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.sizeOf(context).width * 0.5,
+                                child: DateTimeFormField(
+                                  mode: DateTimeFieldPickerMode.date,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime.now().subtract(
+                                    const Duration(days: 60),
                                   ),
-                                ),
-                                Expanded(
-                                  flex: 6,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    child: TextFormField(
-                                      controller: _boughtDateController,
-                                      readOnly: true,
-                                      decoration: const InputDecoration(
-                                        labelText: 'Data da compra',
-                                      ),
-                                    ),
+                                  lastDate: DateTime.now(),
+                                  decoration: const InputDecoration(
+                                    labelText: 'Data de compra',
+                                    icon: Icon(Icons.date_range_outlined),
                                   ),
+                                  dateFormat: DateFormat('dd/MM/yyyy'),
                                 ),
-                                Expanded(
-                                  flex: 3,
-                                  child: Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 5),
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        _boughtDateController.text =
-                                            dateFormatter.format(
-                                          DateTime.now().subtract(
-                                            const Duration(days: 2),
-                                          ),
-                                        );
-                                      },
-                                      child: const Text('Ontem'),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                              ),
+                            ],
+                          ),
+                          TextButton(
+                            onPressed: () {},
+                            child: Container(
+                              margin: EdgeInsets.only(top: 20),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 40),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.black87,
+                              ),
+                              child: Text(
+                                'Cadastrar',
+                                style: kBrandTextStyle(20, color: Colors.white),
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: const Text('Cadastrar'),
-                    ),
-                  )
                 ],
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class DoubleFieldRow extends StatelessWidget {
+  const DoubleFieldRow({super.key, required this.child1, required this.child2});
+
+  final Widget child1;
+  final Widget child2;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        SizedBox(
+          width: MediaQuery.sizeOf(context).width * 0.4,
+          child: child1,
+        ),
+        SizedBox(
+          width: MediaQuery.sizeOf(context).width * 0.4,
+          child: child2,
+        ),
+      ],
     );
   }
 }

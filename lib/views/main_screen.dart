@@ -1,35 +1,51 @@
 import 'package:app_jms/controllers/showcase_manager.dart';
+import 'package:app_jms/controllers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:app_jms/models/product.dart';
 import 'package:provider/provider.dart';
 import '../components/product_list_tile.dart';
+import '../constants.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
-  static const String id = '/main'; //TODO create other initial route
+  static const String id = '/main';
 
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    Provider.of<ShowcaseManager>(context).refreshFromCloud();
+
     List<Product> productList =
         Provider.of<ShowcaseManager>(context, listen: true).productList;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('App Janete Semijoias'),
+        title: Text('JM Semijoias', style: kBrandTextStyle(25,color: Colors.amber.shade200),),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Symbols.payments))
+          IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Provider.of<UserProvider>(context, listen: false).signOutUser();
+              Navigator.pushNamed(context, '/');
+            },
+            icon: const Icon(Icons.logout),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Provider.of<ShowcaseManager>(context, listen: false).getCloudProducts();
           Navigator.pushNamed(context, '/add');
         },
         child: const Icon(

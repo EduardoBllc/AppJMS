@@ -14,3 +14,4 @@ TextStyle kBrandTextStyle(double fontSize, {Color? color}) {
     color: color ?? Colors.black,
   );
 }
+

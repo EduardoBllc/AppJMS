@@ -1,15 +1,40 @@
 import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/user.dart';
 
-class UserProvider extends ChangeNotifier{
+class UserProvider extends ChangeNotifier {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  late Map<String, String> _actualUser;
+  Future<String?> createNewUser(
+      String username, String email, String password) async {
+    try {
+      await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      var collections = await _firestore.collection('usuarios').get();
+      int newUserId = collections.docs.length;
+      await _firestore.collection('usuarios').doc('user$newUserId').set({
+        'email': email,
+        'nome': username,
+      });
+      return null;
+    } on FirebaseAuthException catch (e) {
+      return e.message;
+    }
+  }
 
-  Map<String, String> get actualUser => Map.unmodifiable(_actualUser);
+  Future<String?> signInUser(
+      {required String email, required String password}) async {
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      return null;
+    } on FirebaseAuthException catch (e) {
+      return e.message;
+    }
+  }
 
-  void setActualUser(String username, String email, String password) {
-    _actualUser['username'] = username;
-    _actualUser['email'] = email;
-    _actualUser['password'] = password;
-    notifyListeners();
+  signOutUser() async {
+    await _auth.signOut();
   }
 }

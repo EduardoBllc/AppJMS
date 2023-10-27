@@ -20,6 +20,7 @@ class ProductListTile extends StatelessWidget {
         subtitle: Text(
             '${product.category.name} - ${product.metal.name}\n${product.modality.name}'),
         isThreeLine: true,
+
         trailing: Column(
           children: [
             Text('${product.cost}'),

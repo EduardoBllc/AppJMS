@@ -7,11 +7,13 @@ class LogInFormField extends StatelessWidget {
     required this.labelText,
     required this.controller,
     this.isPassword = false,
+    this.validator,
   });
 
   final String labelText;
   final TextEditingController controller;
   final bool isPassword;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,7 @@ class LogInFormField extends StatelessWidget {
         ),
         textAlign: TextAlign.center,
         obscureText: isPassword,
+        validator: validator,
       ),
     );
   }
