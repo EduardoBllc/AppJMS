@@ -14,7 +14,3 @@ void showSnackBar({
     ),
   );
 }
-
-void showMaterialBanner(BuildContext context){
-  ScaffoldMessenger.of(context).showMaterialBanner(MaterialBanner(content: Text('a'), actions: []));
-}
