@@ -62,6 +62,7 @@ class RouterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(stream: FirebaseAuth.instance.userChanges(), builder: (context, snapshot) {
      if(snapshot.hasData){
+       Provider.of<ShowcaseManager>(context, listen: false).refreshFromCloud();
        return const MainScreen();
      }else{
        return const LogInScreen();

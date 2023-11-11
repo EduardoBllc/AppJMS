@@ -28,11 +28,6 @@ class ShowcaseManager extends ChangeNotifier {
 
   List<Product> get productList => List.unmodifiable(_productsList);
 
-  void addProduct(Product product) {
-    _productsList.add(product);
-    notifyListeners();
-  }
-
   void removeProduct(Product product) {
     _productsList.remove(product);
     notifyListeners();
@@ -56,16 +51,50 @@ class ShowcaseManager extends ChangeNotifier {
 
       _productsList.add(
         Product(
-          supplier: doc['dados_fabrica']['nome'],
-          supplierCode: doc['dados_fabrica']['codigo'],
+          code: doc['codigo'].toString(),
+          supplier: supplierList.firstWhere((element) => element.name == doc['dados_fabrica']['nome']),
+          supplierCode: doc['dados_fabrica']['codigo'].toString(),
           category: category,
           description: doc['descricao'],
           cost: doc['precos']['custo'] / 1.0,
-          upfrontValue: doc['precos']['vista'] / 1.0,
-          deferredValue: doc['precos']['prazo'] / 1.0,
+          aVista: doc['precos']['vista'] / 1.0,
+          aPrazo: doc['precos']['prazo'] / 1.0,
           boughtDate: boughtDate,
         ),
       );
     }
+    notifyListeners();
+  }
+
+
+  Future<void> registerProduct(Product product) async {
+
+    try{
+      var snapshots = await _firestore.collection('produtos').get();
+      int actualKey = snapshots.docs.length;
+
+      await _firestore.collection('produtos').add({
+        'codigo' : actualKey,
+        'data_compra' : product.boughtDate,
+        'descricao' : product.description,
+        'caracteristicas_produto' : {
+          'categoria' : product.category.name,
+          'metal' : product.metal.name,
+          'modalidade' : product.modality.name,
+        },
+        'dados_fabrica' : {
+          'codigo' : product.supplierCode,
+          'nome' : product.supplier.name,
+        },
+        'precos' : {
+          'custo' : product.cost,
+          'vista' : product.aVista,
+          'prazo' : product.aPrazo,
+        },
+      });
+    }catch (e){
+      print(e);
+    }
+    _productsList.add(product);
   }
 }

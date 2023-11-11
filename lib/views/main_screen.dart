@@ -5,6 +5,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:app_jms/models/product.dart';
 import 'package:provider/provider.dart';
 import '../components/product_list_tile.dart';
+import '../components/show_snack_bar.dart';
 import '../constants.dart';
 
 class MainScreen extends StatefulWidget {
@@ -25,15 +26,28 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<ShowcaseManager>(context).refreshFromCloud();
-
     List<Product> productList =
         Provider.of<ShowcaseManager>(context, listen: true).productList;
 
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('JM Semijoias', style: kBrandTextStyle(25,color: Colors.amber.shade200),),
+        title: Text(
+          'JM Semijoias',
+          style: kBrandTextStyle(25, color: Colors.amber.shade200),
+        ),
         actions: [
+          IconButton(
+            onPressed: () {
+              setState(() {
+                Provider.of<ShowcaseManager>(context, listen: false)
+                    .refreshFromCloud();
+              });
+
+              showSnackBar(context: context, message: 'Produtos atualizados');
+            },
+            icon: const Icon(Icons.refresh),
+          ),
           IconButton(
             onPressed: () {
               Navigator.pop(context);

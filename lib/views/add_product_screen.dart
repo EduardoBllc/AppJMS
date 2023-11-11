@@ -1,11 +1,17 @@
+import 'dart:developer';
+
+import 'package:app_jms/components/show_snack_bar.dart';
 import 'package:app_jms/constants.dart';
 import 'package:app_jms/controllers/showcase_manager.dart';
+import 'package:app_jms/models/supplier.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../components/product_form_fields.dart';
 import '../models/product.dart';
 import 'package:intl/intl.dart';
 import 'package:date_field/date_field.dart';
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 
 class AddProductScreen extends StatefulWidget {
   const AddProductScreen({super.key});
@@ -17,8 +23,45 @@ class AddProductScreen extends StatefulWidget {
 }
 
 class _AddProductScreenState extends State<AddProductScreen> {
+  String description = '', supplierCode = '';
+
+  double cost = 0.0, vista = 0.0, prazo = 0.0;
+
+  late DateTime boughtDate;
+
+  final CurrencyTextInputFormatter moneyFormatter = CurrencyTextInputFormatter(
+      locale: 'pt-br', decimalDigits: 2, symbol: 'R\$');
+
+  late Supplier supplier;
+  late Category category;
+  late Metal metal;
+  late Modality modality;
+
   final GlobalKey _productFormKey = GlobalKey<FormState>();
-  final DateFormat dateFormatter = DateFormat('dd/MM/yyyy');
+
+  double autoFormatToCurrency(String? value){
+    if(value!.isNotEmpty) {
+      late String formattedValue = value
+          .split('\$')[1]
+          .replaceAll(',', '.');
+      if (formattedValue.length > 5) {
+        for (int i = 2;
+        i < formattedValue.length;
+        i += 3) {
+          formattedValue =
+              formattedValue.replaceFirst('.', '');
+        }
+      }
+      try {
+        return double.parse(formattedValue);
+      } catch (e) {
+        // print(e);
+        return 0.0;
+      }
+    }
+    return 0.0;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -57,62 +100,149 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          const TextProductFormField(
+                          TextProductFormField(
                             labelText: 'Descrição',
                             hintText: 'Breve descrição da peça',
-                            icon: Icon(Icons.text_fields_outlined),
+                            icon: const Icon(Icons.text_fields_outlined),
+                            onChanged: (text) {
+                              description = text!;
+                            },
+                            validator: (value) {
+                              if (value != null && value.isEmpty) {
+                                return 'Preencha a descrição do produto';
+                              }
+                              return null;
+                            },
                           ),
                           DoubleFieldRow(
-                            child1: DropdownProductFormField(
+                            child1: DropdownProductFormField<Category>(
                               labelText: 'Categoria',
                               list: Category.values,
                               icon: const Icon(Icons.category_outlined),
-                              onChanged: (value) {},
+                              onSelected: (newCategory) {
+                                category = newCategory!;
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Insira a categoria';
+                                }
+                                return null;
+                              },
                             ),
-                            child2: DropdownProductFormField(
+                            child2: DropdownProductFormField<Metal>(
                               labelText: 'Metal',
                               list: Metal.values,
                               icon: const Icon(Icons.texture_outlined),
-                              onChanged: (value) {},
+                              onSelected: (newMetal) {
+                                metal = newMetal!;
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Insira o metal';
+                                }
+                                return null;
+                              },
                             ),
                           ),
                           DoubleFieldRow(
-                            child1: DropdownProductFormField(
+                            child1: DropdownProductFormField<Modality>(
                               labelText: 'Modalidade',
                               list: Modality.values,
                               icon: const Icon(Icons.family_restroom_outlined),
                               flex: 5,
-                              onChanged: (value) {},
+                              onSelected: (newModality) {
+                                modality = newModality!;
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Insira a modalidade';
+                                }
+                                return null;
+                              },
                             ),
-                            child2: DropdownProductFormField(
+                            child2: DropdownProductFormField<Supplier>(
                               icon: const Icon(Icons.factory_outlined),
                               labelText: 'Fábrica',
                               list: Provider.of<ShowcaseManager>(context)
                                   .supplierList,
-                              onChanged: (value) {},
+                              onSelected: (selectedSupplier) {
+                                supplier = selectedSupplier!;
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Insira a fábrica';
+                                }
+                                return null;
+                              },
                             ),
                           ),
-                          const DoubleFieldRow(
+                          DoubleFieldRow(
                             child1: TextProductFormField(
                               flex: 2,
                               labelText: 'Código Fábrica',
-                              icon: Icon(Icons.vpn_key),
+                              icon: const Icon(Icons.vpn_key),
+                              onChanged: (typedCode) {
+                                supplierCode = typedCode!;
+                              },
+                              validator: (value) {
+                                if (value != null && value.isEmpty) {
+                                  return 'Preencha o código da fábrica';
+                                }
+                                return null;
+                              },
                             ),
                             child2: TextProductFormField(
                               labelText: 'Custo',
-                              icon: Icon(Icons.attach_money_outlined),
+                              icon: const Icon(Icons.attach_money_outlined),
+                              validator: (value) {
+                                if (value != null && value.isEmpty) {
+                                  return 'Preencha o custo';
+                                }
+                                return null;
+                              },
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                moneyFormatter,
+                              ],
+                              onChanged: (value) {
+                                cost = autoFormatToCurrency(value);
+                              },
                             ),
                           ),
-                          const DoubleFieldRow(
+                          DoubleFieldRow(
                             child1: TextProductFormField(
                               labelText: 'A vista',
-                              icon: Icon(
-                                Icons.payments_outlined,
-                              ),
+                              icon: const Icon(Icons.payments_outlined),
+                              validator: (value) {
+                                if (value != null && value.isEmpty) {
+                                  return 'Preencha o preço a vista';
+                                }
+                                return null;
+                              },
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                moneyFormatter,
+                              ],
+                              onChanged: (value) {
+                                vista = autoFormatToCurrency(value);
+                              },
                             ),
                             child2: TextProductFormField(
                               labelText: 'A prazo',
-                              icon: Icon(Icons.credit_card_outlined),
+                              icon: const Icon(Icons.credit_card_outlined),
+                              validator: (value) {
+                                if (value != null && value.isEmpty) {
+                                  return 'Preencha o preço a prazo';
+                                }
+                                return null;
+                              },
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                moneyFormatter,
+                              ],
+                              onChanged: (value) {
+                                prazo = autoFormatToCurrency(value);
+                              }
                             ),
                           ),
                           Row(
@@ -123,32 +253,69 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 child: DateTimeFormField(
                                   mode: DateTimeFieldPickerMode.date,
                                   initialDate: DateTime.now(),
-                                  firstDate: DateTime.now().subtract(
-                                    const Duration(days: 60),
-                                  ),
+                                  dateFormat: DateFormat('dd/MM/yyyy'),
+                                  firstDate: DateTime.now()
+                                      .subtract(const Duration(days: 60)),
                                   lastDate: DateTime.now(),
+                                  dateTextStyle: const TextStyle(fontSize: 16),
                                   decoration: const InputDecoration(
                                     labelText: 'Data de compra',
                                     icon: Icon(Icons.date_range_outlined),
                                   ),
-                                  dateFormat: DateFormat('dd/MM/yyyy'),
+                                  onDateSelected: (date) {
+                                    boughtDate = date;
+                                  },
                                 ),
                               ),
                             ],
                           ),
-                          TextButton(
-                            onPressed: () {},
-                            child: Container(
-                              margin: const EdgeInsets.only(top: 20),
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 40),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Colors.black87,
-                              ),
-                              child: Text(
-                                'Cadastrar',
-                                style: kBrandTextStyle(20, color: Colors.white),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: TextButton(
+                              onPressed: () {
+                                log(description);
+                                log(category.name);
+                                log(metal.name);
+                                log(modality.name);
+                                log(supplier.name);
+                                log(supplierCode.toString());
+                                log('$cost');
+                                log('$vista');
+                                log('$prazo');
+                                log(boughtDate.toString());
+
+                                Provider.of<ShowcaseManager>(context, listen: false)
+                                    .registerProduct(
+                                  Product(
+                                    supplier: supplier,
+                                    supplierCode: supplierCode,
+                                    category: category,
+                                    description: description,
+                                    cost: cost/100,
+                                    aVista: vista/100,
+                                    aPrazo: prazo/100,
+                                    boughtDate: boughtDate,
+                                  ),
+                                );
+                                Navigator.pop(context);
+                                showSnackBar(context: context, message: 'Produto cadastrado');
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10,
+                                  horizontal: 40,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Colors.black87,
+                                ),
+                                child: Text(
+                                  'Cadastrar',
+                                  style: kBrandTextStyle(
+                                    20,
+                                    color: Colors.amber[200],
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -162,30 +329,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class DoubleFieldRow extends StatelessWidget {
-  const DoubleFieldRow({super.key, required this.child1, required this.child2});
-
-  final Widget child1;
-  final Widget child2;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        SizedBox(
-          width: MediaQuery.sizeOf(context).width * 0.4,
-          child: child1,
-        ),
-        SizedBox(
-          width: MediaQuery.sizeOf(context).width * 0.4,
-          child: child2,
-        ),
-      ],
     );
   }
 }

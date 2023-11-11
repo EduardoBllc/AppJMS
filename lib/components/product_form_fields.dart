@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import '../models/product.dart';
 
 class TextProductFormField extends StatelessWidget {
   const TextProductFormField({
@@ -10,15 +13,17 @@ class TextProductFormField extends StatelessWidget {
     this.validator,
     this.autovalidateMode = AutovalidateMode.onUserInteraction,
     this.icon,
+    this.inputFormatters,
   });
 
   final String labelText;
   final String? hintText;
-  final void Function(Object?)? onChanged;
-  final String Function(Object?)? validator;
+  final void Function(String?)? onChanged;
+  final String? Function(String?)? validator;
   final int flex;
   final AutovalidateMode autovalidateMode;
   final Icon? icon;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
@@ -37,16 +42,17 @@ class TextProductFormField extends StatelessWidget {
             }
             return null;
           },
+      inputFormatters: inputFormatters,
     );
   }
 }
 
-class DropdownProductFormField extends StatelessWidget {
+class DropdownProductFormField<T extends WithName> extends StatelessWidget {
   const DropdownProductFormField({
     super.key,
     required this.labelText,
     required this.list,
-    required this.onChanged,
+    required this.onSelected,
     this.flex = 1,
     this.validator,
     this.autovalidateMode = AutovalidateMode.onUserInteraction,
@@ -54,25 +60,25 @@ class DropdownProductFormField extends StatelessWidget {
   });
 
   final String labelText;
-  final List list;
-  final void Function(Object?) onChanged;
-  final String Function(Object?)? validator;
+  final List<T> list;
+  final void Function(T?)? onSelected;
+  final String? Function(T?)? validator;
   final int flex;
   final AutovalidateMode autovalidateMode;
   final Icon? icon;
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField(
+    return DropdownButtonFormField<T>(
       items: list
           .map(
-            (e) => DropdownMenuItem(
-              value: e,
-              child: Text(e.name),
+            (item) => DropdownMenuItem<T>(
+              value: item,
+              child: Text(item.name),
             ),
           )
           .toList(),
-      onChanged: onChanged,
+      onChanged: onSelected,
       decoration: InputDecoration(
         labelText: labelText,
         icon: icon,
@@ -80,12 +86,35 @@ class DropdownProductFormField extends StatelessWidget {
       autovalidateMode: autovalidateMode,
       validator: validator ??
           (value) {
-            print(value);
             if (value == null) {
               return 'Selecione este campo';
             }
             return null;
           },
+    );
+  }
+}
+
+class DoubleFieldRow extends StatelessWidget {
+  const DoubleFieldRow({super.key, required this.child1, required this.child2});
+
+  final Widget child1;
+  final Widget child2;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        SizedBox(
+          width: MediaQuery.sizeOf(context).width * 0.4,
+          child: child1,
+        ),
+        SizedBox(
+          width: MediaQuery.sizeOf(context).width * 0.4,
+          child: child2,
+        ),
+      ],
     );
   }
 }
