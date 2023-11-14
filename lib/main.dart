@@ -5,7 +5,8 @@ import 'package:app_jms/views/log_in_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'constants.dart';
-import 'views/main_screen.dart';
+import 'controllers/login_router.dart';
+import 'views/stock_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -30,7 +31,10 @@ class MainApp extends StatelessWidget {
         theme: ThemeData(
           appBarTheme: AppBarTheme(
             backgroundColor: const Color(0xff131313),
-            titleTextStyle: kBrandTextStyle(25,color: Colors.amber.shade200),
+            titleTextStyle: kBrandTextStyle(
+              25,
+              color: Colors.amber.shade200,
+            ),
             actionsIconTheme: IconThemeData(
               color: Colors.amber.shade200,
             ),
@@ -43,31 +47,12 @@ class MainApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         initialRoute: '/',
         routes: {
-          MainScreen.id : (_) => const MainScreen(),
-          AddProductScreen.id : (_) => const AddProductScreen(),
-          LogInScreen.id : (_) => const LogInScreen(),
-          RouterScreen.id : (_) => const RouterScreen(),
+          StockScreen.id: (_) => const StockScreen(),
+          AddProductScreen.id: (_) => const AddProductScreen(),
+          LogInScreen.id: (_) => const LogInScreen(),
+          RouterScreen.id: (_) => const RouterScreen(),
         },
       ),
     );
   }
 }
-
-class RouterScreen extends StatelessWidget {
-  const RouterScreen({super.key});
-
-  static const String id = '/';
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<User?>(stream: FirebaseAuth.instance.userChanges(), builder: (context, snapshot) {
-     if(snapshot.hasData){
-       Provider.of<ShowcaseManager>(context, listen: false).refreshFromCloud();
-       return const MainScreen();
-     }else{
-       return const LogInScreen();
-     }
-    });
-  }
-}
-

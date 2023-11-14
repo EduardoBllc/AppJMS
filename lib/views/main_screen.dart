@@ -1,53 +1,26 @@
-import 'package:app_jms/controllers/showcase_manager.dart';
-import 'package:app_jms/controllers/user_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:material_symbols_icons/symbols.dart';
-import 'package:app_jms/models/product.dart';
 import 'package:provider/provider.dart';
-import '../components/product_list_tile.dart';
+
 import '../components/show_snack_bar.dart';
 import '../constants.dart';
+import '../controllers/user_provider.dart';
 
-class MainScreen extends StatefulWidget {
+class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
 
   static const String id = '/main';
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    List<Product> productList =
-        Provider.of<ShowcaseManager>(context, listen: true).productList;
-
-
     return Scaffold(
+      backgroundColor: Color(0xFFD9D9D9),
       appBar: AppBar(
         title: Text(
           'JM Semijoias',
           style: kBrandTextStyle(25, color: Colors.amber.shade200),
         ),
+        centerTitle: true,
         actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                Provider.of<ShowcaseManager>(context, listen: false)
-                    .refreshFromCloud();
-              });
-
-              showSnackBar(context: context, message: 'Produtos atualizados');
-            },
-            icon: const Icon(Icons.refresh),
-          ),
           IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -58,20 +31,79 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, '/add');
-        },
-        child: const Icon(
-          Symbols.add,
-          size: 35,
+      body: Center(
+        child: Container(
+          width: MediaQuery.sizeOf(context).width,
+          height: MediaQuery.sizeOf(context).height,
+          margin: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/stock');
+                },
+                child: Container(
+                  width: 300,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF313131),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Estoque',
+                      style: kBrandTextStyle(40, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/sales');
+                },
+                child: Container(
+                  width: 300,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF313131),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Vendas',
+                      style: kBrandTextStyle(40, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/customers');
+                },
+                child: Container(
+                  width: 300,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF313131),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Clientes',
+                      style: kBrandTextStyle(40, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-      body: ListView.builder(
-        itemCount: productList.length,
-        itemBuilder: (context, index) {
-          return ProductListTile(product: productList[index]);
-        },
       ),
     );
   }

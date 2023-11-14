@@ -3,7 +3,7 @@ import 'package:app_jms/models/supplier.dart';
 class Product {
 
   Product({
-    this.code,
+    required this.code,
     required this.supplier,
     required this.supplierCode,
     this.modality = Modality.adult,
@@ -17,7 +17,7 @@ class Product {
   });
   final Supplier supplier;
   final String supplierCode;
-  final String? code;
+  final int code;
   final Modality modality;
   final Category category;
   final Metal metal;
@@ -33,7 +33,7 @@ abstract class WithName {
   String get name;
 }
 
-enum Modality implements WithName{
+enum Modality implements WithName {
   child('Infantil'),
   adult('Adulto');
 
@@ -41,6 +41,10 @@ enum Modality implements WithName{
 
   @override
   final String name;
+
+  static findItem(String name){
+    return values.firstWhere((element) => element.name == name);
+  }
 }
 
 enum Category implements WithName{
@@ -54,7 +58,12 @@ enum Category implements WithName{
 
   @override
   final String name;
+
   final String path;
+
+  static findItem(String name){
+    return values.firstWhere((element) => element.name == name);
+  }
 }
 
 enum Metal implements WithName{
@@ -65,4 +74,8 @@ enum Metal implements WithName{
 
   @override
   final String name;
+
+  static findItem(String name){
+    return values.firstWhere((element) => element.name == name);
+  }
 }

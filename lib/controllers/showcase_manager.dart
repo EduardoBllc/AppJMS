@@ -1,13 +1,16 @@
+import 'package:app_jms/services/helpers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import '../models/product.dart';
 import '../models/supplier.dart';
+import '../services/firebase_services.dart';
 
 class ShowcaseManager extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseServices _firebaseServices = FirebaseServices();
+  final Helper _helper = Helper();
 
   final List<Product> _productsList = [];
-
   final List<Supplier> _supplierList = [
     Supplier(name: 'Condor'),
     Supplier(name: 'Poli Joias'),
@@ -28,30 +31,18 @@ class ShowcaseManager extends ChangeNotifier {
 
   List<Product> get productList => List.unmodifiable(_productsList);
 
-  void removeProduct(Product product) {
-    _productsList.remove(product);
-    notifyListeners();
-  }
-
   void refreshFromCloud() async {
-    var allDocs = await _firestore.collection('produtos').get();
+    var allDocs = await _firebaseServices.getAllCloudDocs('produtos');
     _productsList.clear();
 
-    for (var doc in allDocs.docs) {
-      Category category = Category.values.firstWhere((element) => element.name == doc['caracteristicas_produto']['categoria']);
-      late DateTime boughtDate;
+    for (var doc in allDocs) {
+      Category category = Category.findItem(doc['caracteristicas_produto']['categoria']);
 
-      try{
-        Timestamp timestamp = doc['data_compra'] as Timestamp;
-        int timestampMilli = timestamp.millisecondsSinceEpoch;
-        boughtDate = DateTime.fromMillisecondsSinceEpoch(timestampMilli);
-      }catch(e){
-        print(e);
-      }
+      DateTime boughtDate = _helper.cloudTimeStampToDateTime(doc['data_compra']);
 
       _productsList.add(
         Product(
-          code: doc['codigo'].toString(),
+          code: doc['codigo'],
           supplier: supplierList.firstWhere((element) => element.name == doc['dados_fabrica']['nome']),
           supplierCode: doc['dados_fabrica']['codigo'].toString(),
           category: category,
@@ -66,35 +57,57 @@ class ShowcaseManager extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> registerProduct({
+    required Supplier supplier,
+    required String supplierCode,
+    Modality? modality = Modality.adult,
+    required Category category,
+    Metal metal = Metal.gold,
+    required String description,
+    required double cost,
+    required double aVista,
+    required double aPrazo,
+    required DateTime boughtDate,
+  }) async {
+    try {
+      var snapshots = await _firebaseServices.getAllCloudDocs('produtos');
 
-  Future<void> registerProduct(Product product) async {
+      int actualKey = snapshots.length;
 
-    try{
-      var snapshots = await _firestore.collection('produtos').get();
-      int actualKey = snapshots.docs.length;
+      Product newProduct = Product(
+        code: actualKey,
+        supplier: supplier,
+        supplierCode: supplierCode,
+        category: category,
+        description: description,
+        cost: cost,
+        aVista: aVista,
+        aPrazo: aPrazo,
+        boughtDate: boughtDate,
+      );
 
       await _firestore.collection('produtos').add({
-        'codigo' : actualKey,
-        'data_compra' : product.boughtDate,
-        'descricao' : product.description,
-        'caracteristicas_produto' : {
-          'categoria' : product.category.name,
-          'metal' : product.metal.name,
-          'modalidade' : product.modality.name,
+        'codigo': actualKey,
+        'data_compra': boughtDate,
+        'descricao': description,
+        'caracteristicas_produto': {
+          'categoria': category.name,
+          'metal': metal.name,
+          'modalidade': modality!.name,
         },
-        'dados_fabrica' : {
-          'codigo' : product.supplierCode,
-          'nome' : product.supplier.name,
+        'dados_fabrica': {
+          'codigo': supplierCode,
+          'nome': supplier.name,
         },
-        'precos' : {
-          'custo' : product.cost,
-          'vista' : product.aVista,
-          'prazo' : product.aPrazo,
+        'precos': {
+          'custo': cost,
+          'vista': aVista,
+          'prazo': aPrazo,
         },
       });
-    }catch (e){
-      print(e);
+      _productsList.add(newProduct);
+    } catch (e) {
+      // log(e);
     }
-    _productsList.add(product);
   }
 }

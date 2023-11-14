@@ -286,7 +286,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
                                 Provider.of<ShowcaseManager>(context, listen: false)
                                     .registerProduct(
-                                  Product(
+
                                     supplier: supplier,
                                     supplierCode: supplierCode,
                                     category: category,
@@ -295,7 +295,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                     aVista: vista/100,
                                     aPrazo: prazo/100,
                                     boughtDate: boughtDate,
-                                  ),
+
                                 );
                                 Navigator.pop(context);
                                 showSnackBar(context: context, message: 'Produto cadastrado');
