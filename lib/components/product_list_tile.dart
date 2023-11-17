@@ -1,3 +1,4 @@
+import 'package:app_jms/constants.dart';
 import 'package:flutter/material.dart';
 
 import '../models/product.dart';
@@ -15,7 +16,8 @@ class ProductListTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       child: Material(
-        color: Color(0xFFE3E3E3),
+        color: kColorScheme.onBackground,
+        // const Color(0xFFE3E3E3),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         elevation: 2,
         child: Padding(
@@ -35,57 +37,38 @@ class ProductListTile extends StatelessWidget {
                     children: [
                       Text(
                         product.description,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
+                          color: Colors.black.withOpacity(0.7),
                         ),
                       ),
                       Text(
                         '${product.category.name} - ${product.metal.name} - ${product.modality.name}',
-                        style: TextStyle(color: Colors.grey.shade700),
+                        style: TextStyle(color: Colors.grey.shade600),
                       ),
                     ],
                   ),
                 ),
               ),
-              Expanded(
-                flex: 2,
+              SizedBox(
+                width: MediaQuery.sizeOf(context).width * 0.25,
                 child: Column(
+                  mainAxisSize: MainAxisSize.max,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Icon(
-                          Icons.attach_money_outlined,
-                          size: 18,
-                          color: Colors.grey[700],
-                        ),
-                        Text('R\$${product.cost.toStringAsFixed(2)}'),
-                      ],
+                    IconTextRow(
+                      icon: Icons.attach_money_outlined,
+                      text: 'R\$${product.cost.toStringAsFixed(2)}',
                     ),
-                    SizedBox(height: 5,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Icon(
-                          Icons.payments_outlined,
-                          size: 18,
-                          color: Colors.grey[700],
-                        ),
-                        Text('R\$${product.aVista.toStringAsFixed(2)}'),
-                      ],
+                    const SizedBox(height: 5),
+                    IconTextRow(
+                      icon: Icons.payments_outlined,
+                      text: 'R\$${product.aVista.toStringAsFixed(2)}',
                     ),
-                    SizedBox(height: 5,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Icon(
-                          Icons.credit_card_outlined,
-                          size: 18,
-                          color: Colors.grey[700],
-                        ),
-                        Text('R\$${product.aPrazo.toStringAsFixed(2)}'),
-                      ],
+                    const SizedBox(height: 5),
+                    IconTextRow(
+                      icon: Icons.credit_card_outlined,
+                      text: 'R\$${product.aPrazo.toStringAsFixed(2)}',
                     ),
                   ],
                 ),
@@ -94,6 +77,35 @@ class ProductListTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class IconTextRow extends StatelessWidget {
+  const IconTextRow({
+    super.key,
+    required this.icon,
+    required this.text,
+  });
+
+  final IconData icon;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Icon(
+          icon,
+          size: 18,
+          color: Colors.grey[700],
+        ),
+        Text(
+          text,
+          style: TextStyle(color: Colors.black.withOpacity(0.7)),
+        ),
+      ],
     );
   }
 }

@@ -1,25 +1,49 @@
+import 'package:app_jms/views/sales_screen.dart';
+import 'package:app_jms/views/stock_screen.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../components/show_snack_bar.dart';
 import '../constants.dart';
 import '../controllers/user_provider.dart';
+import 'configuration_drawer.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
-  static const String id = '/main';
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  int _currentPageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
     return Scaffold(
-      backgroundColor: Color(0xFFD9D9D9),
+      drawer: const ConfigurationDrawer(),
+      key: scaffoldKey,
       appBar: AppBar(
+        elevation: 0.5,
+        leading: GestureDetector(
+          onTap: () {
+            scaffoldKey.currentState!.openDrawer();
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: CircleAvatar(
+              foregroundImage:
+                  const AssetImage('assets/images/avatar_default.png'),
+              backgroundColor: Colors.grey[600],
+            ),
+          ),
+        ),
+        centerTitle: true,
         title: Text(
           'JM Semijoias',
           style: kBrandTextStyle(25, color: Colors.amber.shade200),
         ),
-        centerTitle: true,
         actions: [
           IconButton(
             onPressed: () {
@@ -31,80 +55,54 @@ class MainScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: Container(
-          width: MediaQuery.sizeOf(context).width,
-          height: MediaQuery.sizeOf(context).height,
-          margin: const EdgeInsets.all(20),
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15),
+      bottomNavigationBar: CurvedNavigationBar(
+        animationDuration: const Duration(milliseconds: 250),
+        height: 65,
+        buttonBackgroundColor: Colors.black,
+        index: _currentPageIndex,
+        items: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.black,
+              border: Border.all(
+                width: 2,
+                color: kColorScheme.primary,
+              ),
+            ),
+            child: Icon(
+              Icons.diamond_outlined,
+              size: 33,
+              color: kColorScheme.primary,
+            ),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/stock');
-                },
-                child: Container(
-                  width: 300,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF313131),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Estoque',
-                      style: kBrandTextStyle(40, color: Colors.white),
-                    ),
-                  ),
-                ),
+          Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(
+                width: 2,
+                color: kColorScheme.primary,
               ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/sales');
-                },
-                child: Container(
-                  width: 300,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF313131),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Vendas',
-                      style: kBrandTextStyle(40, color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/customers');
-                },
-                child: Container(
-                  width: 300,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF313131),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Clientes',
-                      style: kBrandTextStyle(40, color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
+            child: Icon(
+              Icons.account_balance_wallet_outlined,
+              size: 28,
+              color: kColorScheme.primary,
+            ),
           ),
-        ),
+        ],
+        color: Colors.white,
+        backgroundColor: kColorScheme.background,
+        onTap: (index) {
+          _currentPageIndex = index;¨¨
+        },
       ),
+      body: [
+        const StockScreen(),
+        const SalesScreen(),
+        // const ReportsScreen(),
+      ][_currentPageIndex],
     );
   }
 }

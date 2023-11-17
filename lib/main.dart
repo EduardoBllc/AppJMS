@@ -2,6 +2,7 @@ import 'package:app_jms/controllers/showcase_manager.dart';
 import 'package:app_jms/controllers/user_provider.dart';
 import 'package:app_jms/views/add_product_screen.dart';
 import 'package:app_jms/views/log_in_screen.dart';
+import 'package:app_jms/views/sales_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'constants.dart';
@@ -24,13 +25,15 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<ShowcaseManager>(create: (_) => ShowcaseManager()),
+        ChangeNotifierProvider<ShowcaseManager>(
+            create: (_) => ShowcaseManager()),
         ChangeNotifierProvider<UserProvider>(create: (_) => UserProvider()),
       ],
       child: MaterialApp(
         theme: ThemeData(
+          useMaterial3: true,
           appBarTheme: AppBarTheme(
-            backgroundColor: const Color(0xff131313),
+            // backgroundColor: const Color(0xff131313),
             titleTextStyle: kBrandTextStyle(
               25,
               color: Colors.amber.shade200,
@@ -43,15 +46,10 @@ class MainApp extends StatelessWidget {
             backgroundColor: Colors.black87,
             foregroundColor: Colors.amber.shade100,
           ),
+          colorScheme: kColorScheme,
         ),
         debugShowCheckedModeBanner: false,
-        initialRoute: '/',
-        routes: {
-          StockScreen.id: (_) => const StockScreen(),
-          AddProductScreen.id: (_) => const AddProductScreen(),
-          LogInScreen.id: (_) => const LogInScreen(),
-          RouterScreen.id: (_) => const RouterScreen(),
-        },
+        home: const RouterScreen(),
       ),
     );
   }

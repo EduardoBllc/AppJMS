@@ -8,8 +8,6 @@ import '../views/main_screen.dart';
 class RouterScreen extends StatelessWidget {
   const RouterScreen({super.key});
 
-  static const String id = '/';
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(

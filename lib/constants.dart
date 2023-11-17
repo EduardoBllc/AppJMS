@@ -15,3 +15,16 @@ TextStyle kBrandTextStyle(double fontSize, {Color? color}) {
   );
 }
 
+ColorScheme kColorScheme = ColorScheme(
+  brightness: Brightness.light,
+  primary: Colors.amber.shade200,
+  onPrimary: Colors.white,
+  secondary: Colors.black,
+  onSecondary: Colors.white,
+  error: Colors.red,
+  onError: Colors.white,
+  background: const Color(0xFFD9D9D9),
+  onBackground: Colors.white,
+  surface: Colors.black,
+  onSurface: Colors.amber.shade200,
+);
