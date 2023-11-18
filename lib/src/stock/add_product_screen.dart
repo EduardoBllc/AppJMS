@@ -1,17 +1,16 @@
 import 'dart:developer';
-
-import 'package:app_jms/components/show_snack_bar.dart';
 import 'package:app_jms/constants.dart';
-import 'package:app_jms/controllers/showcase_manager.dart';
 import 'package:app_jms/models/supplier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import '../components/product_form_fields.dart';
-import '../models/product.dart';
 import 'package:intl/intl.dart';
 import 'package:date_field/date_field.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import '../../models/product.dart';
+import '../../services/controllers/showcase_manager.dart';
+import '../shared/components/show_snack_bar.dart';
+import 'components/product_form_fields.dart';
 
 class AddProductScreen extends StatefulWidget {
   const AddProductScreen({super.key});
@@ -59,8 +58,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
     return SafeArea(
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),

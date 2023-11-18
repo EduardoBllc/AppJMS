@@ -1,11 +1,9 @@
-import 'package:app_jms/components/show_snack_bar.dart';
-import 'package:app_jms/controllers/user_provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../components/log_in_field.dart';
-import 'modals/register_modal.dart';
-import '../constants.dart';
-import 'package:provider/provider.dart';
+import '../../services/firebase_services.dart';
+import '../menu/main_screen.dart';
+import 'components/log_in_field.dart';
+import '../shared/components/show_snack_bar.dart';
+import 'register_modal.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({super.key});
@@ -19,21 +17,10 @@ class LogInScreen extends StatefulWidget {
 class _LogInScreenState extends State<LogInScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final FirebaseServices _services = FirebaseServices();
   bool _loading = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  Future<String?> loginUser(
-      {required String email, required String password}) async {
-    try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
-      return null;
-    } on FirebaseAuthException catch (e) {
-      return e.message;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,22 +29,43 @@ class _LogInScreenState extends State<LogInScreen> {
         FocusManager.instance.primaryFocus!.unfocus();
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: Center(
-          child: _loading
-              ? CircleAvatar(
-                  radius: 150,
-                  backgroundColor: Colors.grey[900],
-                  child: const CircularLoading(),
-                )
-              : Column(
+          child: !_loading
+              ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
-                      'JM\nSemi-jóias',
-                      textAlign: TextAlign.start,
-                      style:
-                          TextStyle(fontFamily: 'AbrilFatFace', fontSize: 50),
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          const TextSpan(
+                            text: 'Janete Maria\n',
+                            style: TextStyle(
+                              fontFamily: 'MonteCarlo',
+                              fontSize: 75,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const TextSpan(
+                            text: 'Semi',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontFamily: 'Aboreto',
+                              color: Colors.grey,
+                            ),
+                          ),
+                          TextSpan(
+                            text: 'Jóias',
+                            style: TextStyle(
+                              fontSize: 30,
+                              fontFamily: 'Aboreto',
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.end,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
@@ -103,12 +111,16 @@ class _LogInScreenState extends State<LogInScreen> {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
                         backgroundColor: Colors.black,
-                        textStyle: kBrandTextStyle(25),
-                        elevation: 10,
+                        textStyle: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        elevation: 5,
                         padding: const EdgeInsets.symmetric(
-                          vertical: 5,
-                          horizontal: 40,
+                          horizontal: 30,
                         ),
                       ),
                       onPressed: () {
@@ -118,8 +130,8 @@ class _LogInScreenState extends State<LogInScreen> {
                           });
                           String email = _emailController.text;
                           String password = _passwordController.text;
-                          Provider.of<UserProvider>(context, listen: false)
-                              .signInUser(email: email, password: password)
+                          _services
+                              .logInUser(email: email, password: password)
                               .then((String? error) {
                             if (error != null) {
                               setState(() {
@@ -136,7 +148,12 @@ class _LogInScreenState extends State<LogInScreen> {
                                   message: formattedError,
                                   color: Colors.red);
                             } else {
-                              Navigator.pushNamed(context, '/main');
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MainScreen(),
+                                ),
+                              );
                             }
                           });
                         }
@@ -158,50 +175,44 @@ class _LogInScreenState extends State<LogInScreen> {
                       child: const Text('Entrar'),
                     ),
                   ],
+                )
+              : const CircleAvatar(
+                  radius: 150,
+                  backgroundColor: Colors.black,
+                  child: SizedBox(
+                    width: 200,
+                    height: 200,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          left: 0,
+                          top: 0,
+                          child: SizedBox(
+                            width: 180,
+                            height: 180,
+                            child: CircularProgressIndicator(
+                              color: Colors.amber,
+                              strokeWidth: 2,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          right: 0,
+                          bottom: 0,
+                          child: SizedBox(
+                            width: 180,
+                            height: 180,
+                            child: CircularProgressIndicator(
+                              color: Colors.amber,
+                              strokeWidth: 2,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
         ),
-      ),
-    );
-  }
-}
-
-class CircularLoading extends StatelessWidget {
-  const CircularLoading({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return const SizedBox(
-      width: 200,
-      height: 200,
-      child: Stack(
-        children: [
-          Positioned(
-            left: 0,
-            top: 0,
-            child: SizedBox(
-              width: 180,
-              height: 180,
-              child: CircularProgressIndicator(
-                color: Colors.amber,
-                strokeWidth: 2,
-              ),
-            ),
-          ),
-          Positioned(
-            right: 0,
-            bottom: 0,
-            child: SizedBox(
-              width: 180,
-              height: 180,
-              child: CircularProgressIndicator(
-                color: Colors.amber,
-                strokeWidth: 2,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

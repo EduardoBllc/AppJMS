@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '../models/product.dart';
+import '../../../models/product.dart';
 
 class TextProductFormField extends StatelessWidget {
   const TextProductFormField({

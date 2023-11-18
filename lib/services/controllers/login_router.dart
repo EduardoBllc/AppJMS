@@ -1,9 +1,7 @@
-import 'package:app_jms/controllers/showcase_manager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../views/log_in_screen.dart';
-import '../views/main_screen.dart';
+import '../../src/login/log_in_screen.dart';
+import '../../src/menu/main_screen.dart';
 
 class RouterScreen extends StatelessWidget {
   const RouterScreen({super.key});

@@ -17,14 +17,14 @@ TextStyle kBrandTextStyle(double fontSize, {Color? color}) {
 
 ColorScheme kColorScheme = ColorScheme(
   brightness: Brightness.light,
-  primary: Colors.amber.shade200,
-  onPrimary: Colors.white,
-  secondary: Colors.black,
-  onSecondary: Colors.white,
-  error: Colors.red,
-  onError: Colors.white,
-  background: const Color(0xFFD9D9D9),
+  primary: const Color(0xFFF2CA73),
+  onPrimary: const Color(0xFFA68A56),
+  secondary: const Color(0xFF594A2E),
+  onSecondary: Colors.amber.shade100,
+  error: Colors.red.shade200,
+  onError: Colors.red,
+  background: Colors.grey.shade100,
   onBackground: Colors.white,
-  surface: Colors.black,
-  onSurface: Colors.amber.shade200,
+  surface: const Color(0xff131313),
+  onSurface: const Color(0xFFFFDA8A),
 );

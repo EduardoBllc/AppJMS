@@ -1,9 +1,9 @@
 import 'package:app_jms/constants.dart';
-import 'package:app_jms/controllers/showcase_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:app_jms/models/product.dart';
 import 'package:provider/provider.dart';
-import '../components/product_list_tile.dart';
+import '../../services/controllers/showcase_manager.dart';
+import 'components/product_list_tile.dart';
 
 class StockScreen extends StatefulWidget {
   const StockScreen({super.key});
@@ -15,7 +15,7 @@ class StockScreen extends StatefulWidget {
 class _StockScreenState extends State<StockScreen> {
   @override
   void initState() {
-    Provider.of<ShowcaseManager>(context, listen: false).refreshFromCloud();
+    Provider.of<ShowcaseManager>(context, listen: false).getProducts();
     super.initState();
   }
 
@@ -28,8 +28,7 @@ class _StockScreenState extends State<StockScreen> {
       backgroundColor: kColorScheme.surface,
       onRefresh: () async {
         setState(() {
-          Provider.of<ShowcaseManager>(context, listen: false)
-              .refreshFromCloud();
+          Provider.of<ShowcaseManager>(context, listen: false).getProducts();
         });
       },
       child: ListView.builder(

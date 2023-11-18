@@ -1,9 +1,9 @@
-import 'package:app_jms/components/log_in_field.dart';
 import 'package:app_jms/constants.dart';
+import 'package:app_jms/services/firebase_services.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../controllers/user_provider.dart';
+import '../menu/main_screen.dart';
+import 'components/log_in_field.dart';
 
 class RegisterModal extends StatefulWidget {
   const RegisterModal({
@@ -24,6 +24,8 @@ class _RegisterModalState extends State<RegisterModal> {
   final TextEditingController _usernameController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final FirebaseServices _services = FirebaseServices();
 
   @override
   Widget build(BuildContext context) {
@@ -98,14 +100,18 @@ class _RegisterModalState extends State<RegisterModal> {
                     onPressed: () {
                       String username = _usernameController.text;
                       if (_formKey.currentState!.validate()) {
-                        Provider.of<UserProvider>(context, listen: false)
-                            .createNewUser(
+                        _services.createNewUser(
                           username,
                           widget.userEmail,
                           widget.userPassword,
                         );
                         Navigator.pop(context);
-                        Navigator.pushNamed(context, '/main');
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MainScreen(),
+                          ),
+                        );
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('Usuário cadastrado com sucesso!'),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../constants.dart';
+import '../../../constants.dart';
 
 class LogInFormField extends StatelessWidget {
   const LogInFormField({
@@ -20,8 +20,12 @@ class LogInFormField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: TextFormField(
+        style: const TextStyle(
+          color: Colors.black,
+        ),
         controller: controller,
         decoration: InputDecoration(
+          border: kGoldenFieldBorder,
           enabledBorder: kGoldenFieldBorder,
           focusedBorder: kGoldenFieldBorder,
           labelText: labelText,

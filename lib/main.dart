@@ -1,13 +1,7 @@
-import 'package:app_jms/controllers/showcase_manager.dart';
-import 'package:app_jms/controllers/user_provider.dart';
-import 'package:app_jms/views/add_product_screen.dart';
-import 'package:app_jms/views/log_in_screen.dart';
-import 'package:app_jms/views/sales_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:app_jms/services/controllers/login_router.dart';
+import 'package:app_jms/services/controllers/showcase_manager.dart';
 import 'package:flutter/material.dart';
 import 'constants.dart';
-import 'controllers/login_router.dart';
-import 'views/stock_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -23,30 +17,54 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextStyle blackFont = const TextStyle(color: Colors.black);
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<ShowcaseManager>(
             create: (_) => ShowcaseManager()),
-        ChangeNotifierProvider<UserProvider>(create: (_) => UserProvider()),
       ],
       child: MaterialApp(
-        theme: ThemeData(
+        themeMode: ThemeMode.dark,
+        darkTheme: ThemeData(
           useMaterial3: true,
+          colorScheme: kColorScheme,
           appBarTheme: AppBarTheme(
-            // backgroundColor: const Color(0xff131313),
+            backgroundColor: const Color(0xff131313),
             titleTextStyle: kBrandTextStyle(
               25,
-              color: Colors.amber.shade200,
             ),
             actionsIconTheme: IconThemeData(
               color: Colors.amber.shade200,
+            ),
+          ),
+          navigationBarTheme: NavigationBarThemeData(
+            indicatorShape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            indicatorColor: Colors.black.withOpacity(0.7),
+            labelTextStyle: MaterialStateProperty.resolveWith<TextStyle>(
+              (Set<MaterialState> states) {
+                return const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                );
+              },
+            ),
+            iconTheme: MaterialStateProperty.resolveWith<IconThemeData>(
+              (Set<MaterialState> states) {
+                return IconThemeData(
+                  color: states.contains(MaterialState.selected)
+                      ? kColorScheme.primary
+                      : kColorScheme.onPrimary,
+                );
+              },
             ),
           ),
           floatingActionButtonTheme: FloatingActionButtonThemeData(
             backgroundColor: Colors.black87,
             foregroundColor: Colors.amber.shade100,
           ),
-          colorScheme: kColorScheme,
         ),
         debugShowCheckedModeBanner: false,
         home: const RouterScreen(),
