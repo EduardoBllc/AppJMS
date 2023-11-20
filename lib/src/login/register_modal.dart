@@ -1,8 +1,6 @@
 import 'package:app_jms/constants.dart';
 import 'package:app_jms/services/firebase_services.dart';
 import 'package:flutter/material.dart';
-
-import '../menu/main_screen.dart';
 import 'components/log_in_field.dart';
 
 class RegisterModal extends StatefulWidget {
@@ -106,12 +104,7 @@ class _RegisterModalState extends State<RegisterModal> {
                           widget.userPassword,
                         );
                         Navigator.pop(context);
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const MainScreen(),
-                          ),
-                        );
+                        Navigator.pushReplacementNamed(context, '/main');
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('Usuário cadastrado com sucesso!'),

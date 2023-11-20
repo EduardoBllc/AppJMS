@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../services/firebase_services.dart';
-import '../menu/main_screen.dart';
 import 'components/log_in_field.dart';
-import '../shared/components/show_snack_bar.dart';
+import '../shared/scaffold_callers/show_snack_bar.dart';
 import 'register_modal.dart';
 
 class LogInScreen extends StatefulWidget {
@@ -148,12 +147,7 @@ class _LogInScreenState extends State<LogInScreen> {
                                   message: formattedError,
                                   color: Colors.red);
                             } else {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const MainScreen(),
-                                ),
-                              );
+                              Navigator.pushReplacementNamed(context, '/main');
                             }
                           });
                         }

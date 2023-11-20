@@ -1,3 +1,4 @@
+import 'package:app_jms/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../models/product.dart';
@@ -27,10 +28,27 @@ class TextProductFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      style: TextStyle(
+        color: Colors.grey.shade700,
+      ),
       decoration: InputDecoration(
         labelText: labelText,
         hintText: hintText,
         icon: icon,
+        labelStyle: TextStyle(
+          color: Colors.grey.shade700,
+        ),
+        iconColor: kColorScheme.onPrimary,
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.grey.shade700,
+          ),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: kColorScheme.onPrimary,
+          ),
+        ),
       ),
       onChanged: onChanged,
       autovalidateMode: autovalidateMode,
@@ -73,16 +91,33 @@ class DropdownProductFormField<T extends WithName> extends StatelessWidget {
           .map(
             (item) => DropdownMenuItem<T>(
               value: item,
-              child: Text(item.name),
+              child: Text(
+                item.name,
+                style: TextStyle(color: Colors.grey.shade700),
+              ),
             ),
           )
           .toList(),
+      autovalidateMode: autovalidateMode,
       onChanged: onSelected,
       decoration: InputDecoration(
         labelText: labelText,
+        labelStyle: TextStyle(
+          color: Colors.grey.shade700,
+        ),
         icon: icon,
+        iconColor: kColorScheme.onPrimary,
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.grey.shade700,
+          ),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: kColorScheme.onPrimary,
+          ),
+        ),
       ),
-      autovalidateMode: autovalidateMode,
       validator: validator ??
           (value) {
             if (value == null) {

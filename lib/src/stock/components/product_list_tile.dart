@@ -66,7 +66,7 @@ class ProductListTile extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                product.code.toString(),
+                                product.id.toString(),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey,

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:app_jms/services/helpers.dart';
 import 'package:flutter/cupertino.dart';
 import '../../models/product.dart';
@@ -32,15 +33,15 @@ class ShowcaseManager extends ChangeNotifier {
     var allDocs = await _firebaseServices.getAllCollectionDocs('produtos');
     _productsList.clear();
 
-    for (var doc in allDocs) {
+    for (var doc in allDocs!) {
       Category category =
-          Category.findItem(doc['caracteristicas_produto']['categoria']);
+          Category.findItem(doc['caracteristicas']['categoria']);
 
       DateTime boughtDate = Helper.cloudTimeStampToDateTime(doc['data_compra']);
 
       _productsList.add(
         Product(
-          code: doc['codigo'],
+          id: doc['id'],
           supplier: supplierList.firstWhere(
               (element) => element.name == doc['dados_fabrica']['nome']),
           supplierCode: doc['dados_fabrica']['codigo'].toString(),
@@ -70,11 +71,11 @@ class ShowcaseManager extends ChangeNotifier {
   }) async {
     try {
       var snapshots = await _firebaseServices.getAllCollectionDocs('produtos');
+      int actualKey = snapshots!.length;
 
-      int actualKey = snapshots.length;
-
+      log('Criando novo produto');
       Product newProduct = Product(
-        code: actualKey,
+        id: actualKey,
         supplier: supplier,
         supplierCode: supplierCode,
         category: category,
@@ -86,10 +87,26 @@ class ShowcaseManager extends ChangeNotifier {
       );
 
       await _firebaseServices.addProduct(newProduct);
-
+      log('Adicionando nova peça na lista de produtos');
       _productsList.add(newProduct);
+      notifyListeners();
     } catch (e) {
-      // log(e);
+      log(e.toString());
+    }
+  }
+
+  Future<String?> removeProduct(int productId) async {
+    try {
+      await _firebaseServices.removeProduct(productId);
+      log('Removendo peça da lista de produtos');
+      _productsList.remove(
+        _productsList.firstWhere((element) => element.id == productId),
+      );
+      log('Peça removida com sucesso');
+      notifyListeners();
+      return null;
+    } catch (e) {
+      return e.toString();
     }
   }
 }

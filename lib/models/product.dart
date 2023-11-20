@@ -1,23 +1,21 @@
 import 'package:app_jms/models/supplier.dart';
 
 class Product {
-
-  Product({
-    required this.code,
-    required this.supplier,
-    required this.supplierCode,
-    this.modality = Modality.adult,
-    required this.category,
-    this.metal = Metal.gold,
-    required this.description,
-    required this.cost,
-    required this.aVista,
-    required this.aPrazo,
-    required this.boughtDate
-  });
+  Product(
+      {required this.id,
+      required this.supplier,
+      required this.supplierCode,
+      this.modality = Modality.adult,
+      required this.category,
+      this.metal = Metal.gold,
+      required this.description,
+      required this.cost,
+      required this.aVista,
+      required this.aPrazo,
+      required this.boughtDate});
   final Supplier supplier;
   final String supplierCode;
-  final int code;
+  final int id;
   final Modality modality;
   final Category category;
   final Metal metal;
@@ -27,7 +25,6 @@ class Product {
   final double aPrazo;
   final DateTime boughtDate;
 }
-
 
 abstract class WithName {
   String get name;
@@ -42,31 +39,31 @@ enum Modality implements WithName {
   @override
   final String name;
 
-  static findItem(String name){
+  static findItem(String name) {
     return values.firstWhere((element) => element.name == name);
   }
 }
 
-enum Category implements WithName{
-  ring('Anél','assets/images/anel.png'),
-  earring('Brinco','assets/images/brincos.png'),
-  necklace('Colar','assets/images/colar.png'),
-  bracelet('Bracelete','assets/images/pulseira.png'),
-  pendant('Pingente','assets/images/pingente.png');
+enum Category implements WithName {
+  ring('Anél', 'assets/images/anel.png'),
+  earring('Brinco', 'assets/images/brincos.png'),
+  necklace('Colar', 'assets/images/colar.png'),
+  bracelet('Bracelete', 'assets/images/pulseira.png'),
+  pendant('Pingente', 'assets/images/pingente.png');
 
-  const Category(this.name,this.path);
+  const Category(this.name, this.path);
 
   @override
   final String name;
 
   final String path;
 
-  static findItem(String name){
+  static findItem(String name) {
     return values.firstWhere((element) => element.name == name);
   }
 }
 
-enum Metal implements WithName{
+enum Metal implements WithName {
   gold('Ouro'),
   silver('Prata');
 
@@ -75,7 +72,7 @@ enum Metal implements WithName{
   @override
   final String name;
 
-  static findItem(String name){
+  static findItem(String name) {
     return values.firstWhere((element) => element.name == name);
   }
 }

@@ -7,7 +7,12 @@ void showSnackBar({
 }) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      content: Text(message),
+      content: Center(
+        child: Text(
+          message,
+          style: const TextStyle(color: Colors.white),
+        ),
+      ),
       backgroundColor: color,
       duration: const Duration(seconds: 2),
       elevation: 3,

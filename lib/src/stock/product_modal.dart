@@ -1,14 +1,23 @@
+import 'package:app_jms/services/controllers/showcase_manager.dart';
 import 'package:app_jms/services/helpers.dart';
+import 'package:app_jms/src/shared/scaffold_callers//show_snack_bar.dart';
 import 'package:app_jms/src/shared/modals/default_stack_modal.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/product.dart';
+import '../shared/buttons/rounded_material_button.dart';
 
-class ProductModal extends StatelessWidget {
+class ProductModal extends StatefulWidget {
   const ProductModal({super.key, required this.product});
 
   final Product product;
 
+  @override
+  State<ProductModal> createState() => _ProductModalState();
+}
+
+class _ProductModalState extends State<ProductModal> {
   @override
   Widget build(BuildContext context) {
     TextStyle fieldStyle = TextStyle(
@@ -44,7 +53,7 @@ class ProductModal extends StatelessWidget {
               padding: const EdgeInsets.all(15),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.asset(product.category.path),
+                child: Image.asset(widget.product.category.path),
               ),
             ),
           ),
@@ -72,13 +81,13 @@ class ProductModal extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          product.description,
+                          widget.product.description,
                           style: fieldStyle.copyWith(
                               fontSize: 18, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
                         Text(
-                          'Código: ${product.code}',
+                          'Código: ${widget.product.id}',
                           style: fieldStyle.copyWith(
                             color: Colors.grey.shade500,
                           ),
@@ -105,11 +114,11 @@ class ProductModal extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Modali.: ${product.modality.name}',
+                                'Modali.: ${widget.product.modality.name}',
                                 style: fieldStyle,
                               ),
                               Text(
-                                'Categoria: ${product.category.name}',
+                                'Categoria: ${widget.product.category.name}',
                                 style: fieldStyle,
                               ),
                             ],
@@ -121,11 +130,11 @@ class ProductModal extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Metal: ${product.metal.name}',
+                                'Metal: ${widget.product.metal.name}',
                                 style: fieldStyle,
                               ),
                               Text(
-                                'Compra: ${Helper.localDateFormatter(product.boughtDate)}',
+                                'Compra: ${Helper.localDateFormatter(widget.product.boughtDate)}',
                                 style: fieldStyle,
                               ),
                             ],
@@ -137,11 +146,11 @@ class ProductModal extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Forn.: ${product.supplier.name}',
+                                'Forn.: ${widget.product.supplier.name}',
                                 style: fieldStyle,
                               ),
                               Text(
-                                'Cód. Forn.: ${product.supplierCode}',
+                                'Cód. Forn.: ${widget.product.supplierCode}',
                                 style: fieldStyle,
                               ),
                             ],
@@ -169,17 +178,17 @@ class ProductModal extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Text(
-                        'Custo\n${Helper.realCurrencyFormatter(product.cost)}',
+                        'Custo\n${Helper.realCurrencyFormatter(widget.product.cost)}',
                         style: fieldStyle,
                         textAlign: TextAlign.center,
                       ),
                       Text(
-                        'Vista\n${Helper.realCurrencyFormatter(product.aVista)}',
+                        'Vista\n${Helper.realCurrencyFormatter(widget.product.aVista)}',
                         style: fieldStyle,
                         textAlign: TextAlign.center,
                       ),
                       Text(
-                        'Prazo\n${Helper.realCurrencyFormatter(product.aPrazo)}',
+                        'Prazo\n${Helper.realCurrencyFormatter(widget.product.aPrazo)}',
                         style: fieldStyle,
                         textAlign: TextAlign.center,
                       ),
@@ -190,12 +199,34 @@ class ProductModal extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        RoundedMaterialButton(
+                        BorderedMaterialButton(
                           color: Colors.red.shade300,
                           text: 'Apagar',
-                          onTap: () {},
+                          onTap: () async {
+                            String? removeAttempt =
+                                await Provider.of<ShowcaseManager>(context,
+                                        listen: false)
+                                    .removeProduct(widget.product.id);
+                            if (removeAttempt == null) {
+                              if (mounted) {
+                                Navigator.pop(context);
+                                showSnackBar(
+                                  context: context,
+                                  message: 'Peça removida',
+                                );
+                              }
+                            } else {
+                              if (mounted) {
+                                Navigator.pop(context);
+                                showSnackBar(
+                                  context: context,
+                                  message: 'Erro ao remover peça',
+                                );
+                              }
+                            }
+                          },
                         ),
-                        RoundedMaterialButton(
+                        BorderedMaterialButton(
                           color: Colors.green.shade300,
                           text: 'Vender',
                           onTap: () {},
@@ -208,44 +239,6 @@ class ProductModal extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class RoundedMaterialButton extends StatelessWidget {
-  const RoundedMaterialButton({
-    super.key,
-    required this.color,
-    required this.text,
-    required this.onTap,
-  });
-
-  final Color color;
-  final String text;
-  final void Function() onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialButton(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
-      onPressed: onTap,
-      elevation: 1,
-      color: color.withOpacity(0.9),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-        side: BorderSide(
-          color: Colors.white.withOpacity(0.4),
-          width: 2,
-        ),
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 20,
-          color: Colors.white,
-          fontWeight: FontWeight.w500,
-        ),
       ),
     );
   }

@@ -1,9 +1,6 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
-
-import '../models/product.dart';
 
 class Helper {
   static DateTime cloudTimeStampToDateTime(Timestamp timestamp) {
