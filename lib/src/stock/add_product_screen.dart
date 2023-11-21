@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:app_jms/constants.dart';
 import 'package:app_jms/models/supplier.dart';
 import 'package:app_jms/services/firebase_services.dart';
+import 'package:app_jms/services/helpers.dart';
 import 'package:app_jms/src/shared/buttons/rounded_material_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,7 +13,8 @@ import 'package:currency_text_input_formatter/currency_text_input_formatter.dart
 import '../../models/product.dart';
 import '../../services/controllers/showcase_manager.dart';
 import '../shared/configuration_drawer.dart';
-import '../shared/scaffold_callers/show_snack_bar.dart';
+import '../shared/scaffold_components/default_components.dart';
+import '../shared/scaffold_components/show_snack_bar.dart';
 import 'components/product_form_fields.dart';
 
 class AddProductScreen extends StatefulWidget {
@@ -45,30 +47,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  double autoFormatToCurrency(String? value) {
-    if (value!.isNotEmpty) {
-      late String formattedValue = value.split('\$')[1].replaceAll(',', '.');
-      if (formattedValue.length > 5) {
-        for (int i = 2; i < formattedValue.length; i += 3) {
-          formattedValue = formattedValue.replaceFirst('.', '');
-        }
-      }
-      try {
-        return double.parse(formattedValue);
-      } catch (e) {
-        // print(e);
-        return 0.0;
-      }
-    }
-    return 0.0;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       endDrawer: const ConfigurationDrawer(),
       key: _scaffoldKey,
-      appBar: kAppBar(
+      appBar: kDefaultAppBar(
         context,
         backgroundColor: const Color(0xff131313),
         firebaseServices: _firebaseServices,
@@ -214,7 +198,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 moneyFormatter,
                               ],
                               onChanged: (value) {
-                                cost = autoFormatToCurrency(value);
+                                cost = Helper.autoFormatToCurrency(value);
                               },
                             ),
                           ),
@@ -233,7 +217,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 moneyFormatter,
                               ],
                               onChanged: (value) {
-                                vista = autoFormatToCurrency(value);
+                                vista = Helper.autoFormatToCurrency(value);
                               },
                             ),
                             child2: TextProductFormField(
@@ -250,7 +234,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   moneyFormatter,
                                 ],
                                 onChanged: (value) {
-                                  prazo = autoFormatToCurrency(value);
+                                  prazo = Helper.autoFormatToCurrency(value);
                                 }),
                           ),
                           Row(

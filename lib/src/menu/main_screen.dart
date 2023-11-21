@@ -1,14 +1,12 @@
-import 'package:app_jms/constants.dart';
 import 'package:app_jms/services/firebase_services.dart';
-import 'package:app_jms/src/stock/add_product_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '../customers/customers_screen.dart';
 import '../financial/sales_screen.dart';
 import '../reports/reports_screen.dart';
 import '../shared/configuration_drawer.dart';
+import '../shared/scaffold_components/default_components.dart';
 import '../stock/stock_screen.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -21,132 +19,112 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentPageIndex = 0;
+
+  List<Widget> destinationsList = [
+    const StockScreen(),
+    const CustomersScreen(),
+    if (!kIsWeb) const Placeholder(),
+    const SalesScreen(),
+    const ReportsScreen(),
+  ];
+
   final FirebaseServices _firebaseServices = FirebaseServices();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // backgroundColor: Color(0xFFD9D9D9),
-      drawer: const ConfigurationDrawer(),
-      key: _scaffoldKey,
-      appBar: kAppBar(
-        context,
-        scaffoldKey: _scaffoldKey,
-        firebaseServices: _firebaseServices,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: SpeedDial(
-        overlayColor: Colors.black,
-        overlayOpacity: 0.2,
-        spaceBetweenChildren: 5,
-        icon: Icons.add,
-        iconTheme: const IconThemeData(
-          size: 35,
-        ),
-        children: [
-          SpeedDialChild(
-            shape: const CircleBorder(),
-            label: 'Peça',
-            labelStyle: const TextStyle(color: Colors.black),
-            onTap: () {
-              Navigator.pushNamed(context, AddProductScreen.id);
-            },
-            child: Icon(
-              MdiIcons.ring,
-              color: kColorScheme.onPrimary,
-            ),
-          ),
-          SpeedDialChild(
-            shape: const CircleBorder(),
-            label: 'Venda',
-            labelStyle: const TextStyle(color: Colors.black),
-            onTap: () {},
-            child: Icon(
-              MdiIcons.cash,
-              color: kColorScheme.onPrimary,
-            ),
-          ),
-          SpeedDialChild(
-            shape: const CircleBorder(),
-            label: 'Cliente',
-            labelStyle: const TextStyle(color: Colors.black),
-            onTap: () {},
-            child: Icon(
-              MdiIcons.accountMultiplePlusOutline,
-              color: kColorScheme.onPrimary,
-            ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: Container(
-        decoration: const ShapeDecoration(
-          shape: ContinuousRectangleBorder(),
-          shadows: [
-            BoxShadow(
-              color: Color(0xefe1e0dd),
-              blurRadius: 3,
-              offset: Offset(0, -2),
-              spreadRadius: 0,
-            ),
-          ],
-        ),
-        child: BottomAppBar(
-          color: const Color(0Xfff0eee9),
-          shape: const CircularNotchedRectangle(),
-          notchMargin: 4,
-          clipBehavior: Clip.antiAlias,
-          child: NavigationBar(
-            backgroundColor: Colors.transparent,
-            animationDuration: const Duration(seconds: 1),
-            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-            destinations: const [
-              NavigationDestination(
-                icon: Icon(
-                  Icons.diamond_outlined,
-                  size: 30,
-                ),
-                label: 'Estoque',
-              ),
-              NavigationDestination(
-                icon: Icon(
-                  Icons.person_outline,
-                  size: 30,
-                ),
-                label: 'Clientes',
-              ),
-              SizedBox(),
-              NavigationDestination(
-                icon: Icon(
-                  Icons.account_balance_wallet_outlined,
-                  size: 30,
-                ),
-                label: 'Financeiro',
-              ),
-              NavigationDestination(
-                icon: Icon(
-                  Icons.query_stats,
-                  size: 30,
-                ),
-                label: 'Relatórios',
-              ),
-            ],
-            selectedIndex: _currentPageIndex,
-            onDestinationSelected: (index) {
+    return kIsWeb
+        ? WebScaffold(
+            scaffoldKey: _scaffoldKey,
+            firebaseServices: _firebaseServices,
+            body: destinationsList[_currentPageIndex],
+            navigationRail: kDefaultNavigationRail(_currentPageIndex, (index) {
               setState(() {
                 _currentPageIndex = index;
               });
-            },
-          ),
+            }))
+        : MobileScaffold(
+            scaffoldKey: _scaffoldKey,
+            firebaseServices: _firebaseServices,
+            bottomNavigationBar: kDefaultNavigationBar(
+              _currentPageIndex,
+              (index) {
+                setState(() {
+                  _currentPageIndex = index;
+                });
+              },
+            ),
+            body: destinationsList[_currentPageIndex],
+          );
+  }
+}
+
+class MobileScaffold extends StatelessWidget {
+  const MobileScaffold({
+    super.key,
+    required this.scaffoldKey,
+    required this.firebaseServices,
+    required this.bottomNavigationBar,
+    required this.body,
+  });
+
+  final GlobalKey<ScaffoldState> scaffoldKey;
+  final FirebaseServices firebaseServices;
+  final Widget bottomNavigationBar;
+  final Widget body;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      drawer: const ConfigurationDrawer(),
+      key: scaffoldKey,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      appBar: kDefaultAppBar(
+        context,
+        scaffoldKey: scaffoldKey,
+        firebaseServices: firebaseServices,
+      ),
+      floatingActionButton: kSpeedDial(context),
+      bottomNavigationBar: bottomNavigationBar,
+      body: body,
+    );
+  }
+}
+
+class WebScaffold extends StatelessWidget {
+  const WebScaffold({
+    super.key,
+    required this.scaffoldKey,
+    required this.firebaseServices,
+    required this.body,
+    required this.navigationRail,
+  });
+
+  final GlobalKey<ScaffoldState> scaffoldKey;
+  final FirebaseServices firebaseServices;
+  final Widget body;
+  final NavigationRail navigationRail;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      drawer: const ConfigurationDrawer(),
+      key: scaffoldKey,
+      appBar: kDefaultAppBar(
+        context,
+        scaffoldKey: scaffoldKey,
+        firebaseServices: firebaseServices,
+      ),
+      body: SafeArea(
+        bottom: false,
+        top: false,
+        child: Row(
+          children: [
+            navigationRail,
+            Expanded(child: body),
+          ],
         ),
       ),
-      body: [
-        const StockScreen(),
-        const CustomersScreen(),
-        const Placeholder(),
-        const SalesScreen(),
-        const ReportsScreen(),
-      ][_currentPageIndex],
     );
   }
 }

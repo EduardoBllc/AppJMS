@@ -2,7 +2,7 @@ import 'package:app_jms/constants.dart';
 import 'package:flutter/material.dart';
 import '../../../models/product.dart';
 import '../../../services/helpers.dart';
-import '../product_modal.dart';
+import '../components/product_details_modal.dart';
 
 class ProductListTile extends StatelessWidget {
   const ProductListTile({
@@ -27,7 +27,7 @@ class ProductListTile extends StatelessWidget {
             isScrollControlled: true,
             context: context,
             builder: (context) {
-              return ProductModal(product: product);
+              return ProductDetailsModal(product: product);
             },
           );
         },

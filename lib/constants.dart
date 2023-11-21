@@ -1,4 +1,3 @@
-import 'package:app_jms/services/firebase_services.dart';
 import 'package:flutter/material.dart';
 
 const Color kModalBackgroundColor = Color(0xff737373);
@@ -30,90 +29,25 @@ ColorScheme kColorScheme = ColorScheme(
   onSurface: const Color(0xFFFFDA8A),
 );
 
-AppBar kAppBar(
-  BuildContext context, {
-  required GlobalKey<ScaffoldState> scaffoldKey,
-  required FirebaseServices firebaseServices,
-  bool automaticallyImplyLeading = false,
-  Color? backgroundColor,
-}) {
-  return AppBar(
-    backgroundColor: backgroundColor,
-    elevation: 0,
-    automaticallyImplyLeading: automaticallyImplyLeading,
-    leading: !automaticallyImplyLeading
-        ? GestureDetector(
-            onTap: () {
-              scaffoldKey.currentState!.openDrawer();
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: CircleAvatar(
-                foregroundImage:
-                    const AssetImage('assets/images/avatar_default.png'),
-                backgroundColor: Colors.grey[600],
-              ),
-            ),
-          )
-        : null,
-    centerTitle: true,
-    title: Text.rich(
-      const TextSpan(
-        children: [
-          TextSpan(
-            text: 'JM  ',
-            style: TextStyle(fontFamily: 'Montecarlo', fontSize: 30),
-          ),
-          TextSpan(
-            text: 'semijoias',
-            style: TextStyle(fontFamily: 'Aboreto', fontSize: 17),
-          ),
-        ],
-      ),
-      style: TextStyle(color: Colors.amber.shade200),
-    ),
-    actions: [
-      if (automaticallyImplyLeading)
-        GestureDetector(
-          onTap: () {
-            scaffoldKey.currentState!.openEndDrawer();
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: CircleAvatar(
-              foregroundImage:
-                  const AssetImage('assets/images/avatar_default.png'),
-              backgroundColor: Colors.grey[600],
-            ),
-          ),
-        ),
-      IconButton(
-        onPressed: () {
-          Navigator.pop(context);
-          firebaseServices.logOutUser();
-          Navigator.pushReplacementNamed(context, '/login');
-        },
-        icon: const Icon(Icons.logout),
-      ),
-    ],
-  );
-}
-
 ThemeData kAppTheme = ThemeData(
   useMaterial3: true,
   colorScheme: kColorScheme,
   appBarTheme: kAppBarTheme,
   navigationBarTheme: kNavigationBarTheme,
   floatingActionButtonTheme: kFABTheme,
-  inputDecorationTheme: InputDecorationTheme(
-    labelStyle: TextStyle(
+  inputDecorationTheme: kInputDecorationTheme,
+  navigationRailTheme: kNavigationRailThemeData,
+  bottomAppBarTheme: kBottomAppBarTheme,
+);
+
+InputDecorationTheme kInputDecorationTheme = InputDecorationTheme(
+  labelStyle: TextStyle(
+    color: Colors.grey.shade700,
+  ),
+  iconColor: Colors.grey.shade700,
+  border: UnderlineInputBorder(
+    borderSide: BorderSide(
       color: Colors.grey.shade700,
-    ),
-    iconColor: Colors.grey.shade700,
-    border: UnderlineInputBorder(
-      borderSide: BorderSide(
-        color: Colors.grey.shade700,
-      ),
     ),
   ),
 );
@@ -146,6 +80,31 @@ NavigationBarThemeData kNavigationBarTheme = NavigationBarThemeData(
             : kColorScheme.onPrimary,
       );
     },
+  ),
+);
+
+BottomAppBarTheme kBottomAppBarTheme = const BottomAppBarTheme(
+  color: Color(0Xfff0eee9),
+  shape: CircularNotchedRectangle(),
+);
+
+NavigationRailThemeData kNavigationRailThemeData = NavigationRailThemeData(
+  useIndicator: false,
+  backgroundColor: const Color(0Xfff0eee9),
+  labelType: NavigationRailLabelType.all,
+  unselectedLabelTextStyle: const TextStyle(
+    color: Colors.black,
+  ),
+  unselectedIconTheme: IconThemeData(
+    color: kColorScheme.onPrimary,
+    size: 30,
+  ),
+  selectedLabelTextStyle: const TextStyle(
+    color: Colors.black,
+  ),
+  selectedIconTheme: IconThemeData(
+    color: kColorScheme.primary,
+    size: 80,
   ),
 );
 

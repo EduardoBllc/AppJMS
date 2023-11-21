@@ -104,7 +104,7 @@ class _RegisterModalState extends State<RegisterModal> {
                           widget.userPassword,
                         );
                         Navigator.pop(context);
-                        Navigator.pushReplacementNamed(context, '/main');
+                        Navigator.pushNamed(context, '/main');
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('Usuário cadastrado com sucesso!'),

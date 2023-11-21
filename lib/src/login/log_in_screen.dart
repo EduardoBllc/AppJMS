@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../services/firebase_services.dart';
 import 'components/log_in_field.dart';
-import '../shared/scaffold_callers/show_snack_bar.dart';
+import '../shared/scaffold_components/show_snack_bar.dart';
 import 'register_modal.dart';
 
 class LogInScreen extends StatefulWidget {
@@ -66,9 +66,9 @@ class _LogInScreenState extends State<LogInScreen> {
                       ),
                       textAlign: TextAlign.end,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 40),
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 20),
+                      width: 350,
                       child: Form(
                         key: _formKey,
                         child: Column(
@@ -147,7 +147,7 @@ class _LogInScreenState extends State<LogInScreen> {
                                   message: formattedError,
                                   color: Colors.red);
                             } else {
-                              Navigator.pushReplacementNamed(context, '/main');
+                              Navigator.pushNamed(context, '/main');
                             }
                           });
                         }

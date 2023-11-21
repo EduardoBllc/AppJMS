@@ -1,23 +1,22 @@
 import 'package:app_jms/services/controllers/showcase_manager.dart';
 import 'package:app_jms/services/helpers.dart';
-import 'package:app_jms/src/shared/scaffold_callers//show_snack_bar.dart';
+import 'package:app_jms/src/shared/scaffold_components//show_snack_bar.dart';
 import 'package:app_jms/src/shared/modals/default_stack_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../models/product.dart';
+import '../../shared/buttons/rounded_material_button.dart';
 
-import '../../models/product.dart';
-import '../shared/buttons/rounded_material_button.dart';
-
-class ProductModal extends StatefulWidget {
-  const ProductModal({super.key, required this.product});
+class ProductDetailsModal extends StatefulWidget {
+  const ProductDetailsModal({super.key, required this.product});
 
   final Product product;
 
   @override
-  State<ProductModal> createState() => _ProductModalState();
+  State<ProductDetailsModal> createState() => _ProductDetailsModalState();
 }
 
-class _ProductModalState extends State<ProductModal> {
+class _ProductDetailsModalState extends State<ProductDetailsModal> {
   @override
   Widget build(BuildContext context) {
     TextStyle fieldStyle = TextStyle(
