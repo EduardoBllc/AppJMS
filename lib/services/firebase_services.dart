@@ -7,6 +7,11 @@ class FirebaseServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  void firebaseErrorLogger(FirebaseException e) {
+    log('Código do erro: ${e.code}');
+    log('Mensagem: ${e.message}');
+  }
+
   Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>?>
       getAllCollectionDocs(String collectionName) async {
     log('Buscando todos os documentos da coleçao $collectionName');
@@ -16,9 +21,48 @@ class FirebaseServices {
       return allDocs.docs;
     } on FirebaseException catch (e) {
       log('Erro ao procurar documentos');
-      log('Código do erro: ${e.code}');
-      log('Mensagem: ${e.message}');
+      firebaseErrorLogger(e);
       return null;
+    }
+  }
+
+  Future<CollectionReference<Map<String, dynamic>>?>
+      accessControlTable() async {
+    log('Entrando na tabela de controle');
+    try {
+      return _firestore.collection('controle');
+    } on FirebaseException catch (e) {
+      log('Erro ao capturar próximo código');
+      firebaseErrorLogger(e);
+      return null;
+    }
+  }
+
+  Future<int?> getNextCode(String item) async {
+    try {
+      var controlTable = await accessControlTable();
+      log('Capturando o próximo código de produto');
+      var itemTable = await controlTable!.doc(item).get();
+      return itemTable['total'];
+    } on FirebaseException catch (e) {
+      log('Erro ao capturar próximo código');
+      firebaseErrorLogger(e);
+      return null;
+    }
+  }
+
+  Future<String?> stepInCode(String item) async {
+    try {
+      var controlTable = await accessControlTable();
+      log('Tentando passar para próximo código de $item na tabela de controle');
+      var itemTable = await controlTable!.doc(item).get();
+      int newCode = itemTable['total'] + 1;
+      await controlTable.doc(item).update({'total': newCode});
+      return null;
+    } on FirebaseException catch (e) {
+      log('Erro ao passar para próximo código da tabela de $item');
+      firebaseErrorLogger(e);
+      return e.message;
     }
   }
 
@@ -54,11 +98,11 @@ class FirebaseServices {
           .collection('produtos')
           .doc(newProduct.id.toString())
           .set(productMap);
+      await stepInCode('produtos');
       return null;
     } on FirebaseException catch (e) {
       log('Erro ao cadastrar peça na Firestore');
-      log('Código do erro: ${e.code}');
-      log('Mensagem: ${e.message}');
+      firebaseErrorLogger(e);
       return e.message;
     }
   }
@@ -74,8 +118,7 @@ class FirebaseServices {
       return null;
     } on FirebaseException catch (e) {
       log('Erro ao remover produto');
-      log('Código do erro: ${e.code}');
-      log('Mensagem: ${e.message}');
+      firebaseErrorLogger(e);
       return e.message;
     }
   }
@@ -86,15 +129,15 @@ class FirebaseServices {
   }) async {
     log('Tentando logar usuário');
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      await _auth.signInWithEmailAndPassword(
+          email: email.trim(), password: password.trim());
       log('Sucesso ao logar usuário');
       return null;
     } on FirebaseAuthException catch (e) {
       log('Erro ao tentar logar');
       log('Email e senha da tentativa:\n$email\n$password');
-      log('Código: ${e.code}');
-      log('Mensagem: ${e.message}');
-      return e.message;
+      firebaseErrorLogger(e);
+      return e.code;
     }
   }
 
@@ -120,7 +163,7 @@ class FirebaseServices {
       var collections = await _firestore.collection('usuarios').get();
       int newUserId = collections.docs.length;
       await _firestore.collection('usuarios').doc('user$newUserId').set({
-        'email': email,
+        'email': email.trim(),
         'nome': username,
       });
       log('Sucesso ao criar novo usuário:');
@@ -130,8 +173,7 @@ class FirebaseServices {
       return null;
     } on FirebaseAuthException catch (e) {
       log('Erro ao criar novo usuário');
-      log('Código: ${e.code}');
-      log('Mensagem: ${e.message}');
+      firebaseErrorLogger(e);
       return e.message;
     }
   }

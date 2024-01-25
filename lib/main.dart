@@ -1,8 +1,11 @@
-import 'package:app_jms/services/controllers/login_router.dart';
+import 'package:app_jms/services/controllers/connection_provider.dart';
+import 'package:app_jms/services/login_router.dart';
 import 'package:app_jms/services/controllers/showcase_manager.dart';
-import 'package:app_jms/src/login/log_in_screen.dart';
-import 'package:app_jms/src/menu/main_screen.dart';
-import 'package:app_jms/src/stock/add_product_screen.dart';
+import 'package:app_jms/src/app/login/app_log_in_screen.dart';
+import 'package:app_jms/src/app/menu/app_menu_screen.dart';
+import 'package:app_jms/src/web/stock/add_product_page.dart';
+import 'package:app_jms/src/web/login/web_log_in_page.dart';
+import 'package:app_jms/src/web/menu/web_menu_page.dart';
 import 'package:flutter/material.dart';
 import 'constants.dart';
 import 'package:provider/provider.dart';
@@ -24,18 +27,22 @@ class JmsApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<ShowcaseManager>(
             create: (_) => ShowcaseManager()),
+        ChangeNotifierProvider<ConnectionProvider>(
+            create: (_) => ConnectionProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         initialRoute: '/',
         routes: {
           RouterScreen.id: (_) => const RouterScreen(),
-          MainScreen.id: (_) => const MainScreen(),
-          LogInScreen.id: (_) => const LogInScreen(),
-          AddProductScreen.id: (_) => const AddProductScreen(),
+          WebMenuPage.id: (_) => const WebMenuPage(),
+          WebLogInPage.id: (_) => const WebLogInPage(),
+          AppMenuScreen.id: (_) => const AppMenuScreen(),
+          AppLogInScreen.id: (_) => const AppLogInScreen(),
+          AddProductScreen.id: (_) => const AddProductScreen()
         },
-        themeMode: ThemeMode.dark,
-        darkTheme: kAppTheme,
+        themeMode: ThemeMode.light,
+        theme: kAppTheme,
       ),
     );
   }

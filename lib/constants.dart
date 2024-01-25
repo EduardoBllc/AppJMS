@@ -88,25 +88,7 @@ BottomAppBarTheme kBottomAppBarTheme = const BottomAppBarTheme(
   shape: CircularNotchedRectangle(),
 );
 
-NavigationRailThemeData kNavigationRailThemeData = NavigationRailThemeData(
-  useIndicator: false,
-  backgroundColor: const Color(0Xfff0eee9),
-  labelType: NavigationRailLabelType.all,
-  unselectedLabelTextStyle: const TextStyle(
-    color: Colors.black,
-  ),
-  unselectedIconTheme: IconThemeData(
-    color: kColorScheme.onPrimary,
-    size: 30,
-  ),
-  selectedLabelTextStyle: const TextStyle(
-    color: Colors.black,
-  ),
-  selectedIconTheme: IconThemeData(
-    color: kColorScheme.primary,
-    size: 80,
-  ),
-);
+NavigationRailThemeData kNavigationRailThemeData = NavigationRailThemeData();
 
 FloatingActionButtonThemeData kFABTheme = FloatingActionButtonThemeData(
   backgroundColor: Colors.grey.shade800,

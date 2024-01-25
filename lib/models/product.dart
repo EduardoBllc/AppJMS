@@ -28,6 +28,11 @@ class Product {
 
 abstract class WithName {
   String get name;
+
+  @override
+  String toString() {
+    return name;
+  }
 }
 
 enum Modality implements WithName {

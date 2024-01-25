@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'package:app_jms/services/helpers.dart';
+import 'package:app_jms/services/utils.dart';
 import 'package:flutter/cupertino.dart';
 import '../../models/product.dart';
 import '../../models/supplier.dart';
@@ -70,10 +70,7 @@ class ShowcaseManager extends ChangeNotifier {
     required DateTime boughtDate,
   }) async {
     try {
-      var snapshots = await _firebaseServices.getAllCollectionDocs('produtos');
-      int actualKey = snapshots!.length;
-
-      log('Criando novo produto');
+      int actualKey = (await _firebaseServices.getNextCode('produtos'))!;
       Product newProduct = Product(
         id: actualKey,
         supplier: supplier,
