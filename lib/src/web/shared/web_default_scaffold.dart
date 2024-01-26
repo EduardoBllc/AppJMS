@@ -1,31 +1,32 @@
-import '../shared/scaffold_components/navigation_drawer.dart';
 import 'package:flutter/material.dart';
+
 import '../../../services/firebase_services.dart';
-import '../pages/reports/reports_page.dart';
-import '../pages/financial/sales_page.dart';
-import '../pages/customers/customers_page.dart';
-import '../pages/stock/stock_page.dart';
+import 'scaffold_components/navigation_drawer.dart';
 
-class WebMenuPage extends StatefulWidget {
-  const WebMenuPage({super.key});
+class WebScaffold extends StatelessWidget {
+  const WebScaffold({
+    super.key,
+    required this.body,
+    this.floatingActionButton,
+    this.floatingActionButtonLocation,
+    this.endDrawer,
+    this.scaffoldKey,
+  });
 
-  static const String id = '/menu';
-
-  @override
-  State<WebMenuPage> createState() => _WebMenuPageState();
-}
-
-class _WebMenuPageState extends State<WebMenuPage> {
-  List<Widget> destinationsList = [
-    const StockPage(),
-    const CustomersPage(),
-    const SalesPage(),
-    const ReportsScreen(),
-  ];
+  final Key? scaffoldKey;
+  final Widget body;
+  final Widget? floatingActionButton;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
+  final Widget? endDrawer;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
+      body: body,
+      endDrawer: endDrawer,
+      floatingActionButton: floatingActionButton,
+      floatingActionButtonLocation: floatingActionButtonLocation,
       drawer: const MenuNavigationDrawer(),
       appBar: AppBar(
         elevation: 0,

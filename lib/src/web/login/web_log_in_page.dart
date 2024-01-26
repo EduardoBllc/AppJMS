@@ -70,25 +70,17 @@ class _WebLogInPageState extends State<WebLogInPage> {
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: 'Janete Maria\n',
+                            text: 'Janete\n',
                             style: TextStyle(
                               fontFamily: 'MonteCarlo',
-                              fontSize: 75,
+                              fontSize: 100,
                               color: Colors.black,
                             ),
                           ),
                           TextSpan(
-                            text: 'Semi',
+                            text: 'Semijoias',
                             style: TextStyle(
                               fontSize: 18,
-                              fontFamily: 'Aboreto',
-                              color: Colors.black,
-                            ),
-                          ),
-                          TextSpan(
-                            text: 'Jóias',
-                            style: TextStyle(
-                              fontSize: 30,
                               fontFamily: 'Aboreto',
                               color: Colors.black,
                             ),

@@ -141,10 +141,11 @@ class FirebaseServices {
     }
   }
 
-  logOutUser() async {
+  static logOutUser() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
     log('Tentando deslogar usuário');
     try {
-      await _auth.signOut();
+      await auth.signOut();
       log('Sucesso ao deslogar');
     } on FirebaseAuthException catch (e) {
       log('Erro ao tentar deslogar');

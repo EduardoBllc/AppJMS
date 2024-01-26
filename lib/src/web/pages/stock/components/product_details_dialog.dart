@@ -2,11 +2,11 @@ import 'package:app_jms/src/shared/default_box_shadow.dart';
 import 'package:app_jms/src/shared/styles/default_elevated_button_style.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../models/product.dart';
-import '../../../../services/controllers/showcase_manager.dart';
-import '../../../../services/utils.dart';
-import '../../../shared/colors/stock_elements.dart';
-import '../../shared/scaffold_components/show_snack_bar.dart';
+import '../../../../../models/product.dart';
+import '../../../../../services/controllers/showcase_manager.dart';
+import '../../../../../services/utils.dart';
+import '../../../../app/shared/scaffold_components/show_snack_bar.dart';
+import '../../../../shared/colors/stock_elements.dart';
 
 class ProductDetailsDialog extends StatefulWidget {
   const ProductDetailsDialog({super.key, required this.product});

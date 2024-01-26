@@ -5,14 +5,14 @@ import 'package:provider/provider.dart';
 import '../../../services/controllers/showcase_manager.dart';
 import 'components/product_list_tile.dart';
 
-class StockPage extends StatefulWidget {
-  const StockPage({super.key});
+class StockScreen extends StatefulWidget {
+  const StockScreen({super.key});
 
   @override
-  State<StockPage> createState() => _StockPageState();
+  State<StockScreen> createState() => _StockScreenState();
 }
 
-class _StockPageState extends State<StockPage> {
+class _StockScreenState extends State<StockScreen> {
   @override
   Widget build(BuildContext context) {
     List<Product> productList =

@@ -65,7 +65,7 @@ AppBar kDefaultAppBar(
       IconButton(
         onPressed: () {
           Navigator.pop(context);
-          firebaseServices.logOutUser();
+          FirebaseServices.logOutUser();
           Navigator.pushNamed(context, '/login');
         },
         icon: const Icon(Icons.logout),

@@ -33,7 +33,7 @@ AppBar kDefaultAppBar(
       const TextSpan(
         children: [
           TextSpan(
-            text: 'JM  ',
+            text: 'Janete  ',
             style: TextStyle(fontFamily: 'MonteCarlo', fontSize: 30),
           ),
           TextSpan(
@@ -62,7 +62,7 @@ AppBar kDefaultAppBar(
       IconButton(
         onPressed: () {
           Navigator.pop(context);
-          firebaseServices.logOutUser();
+          FirebaseServices.logOutUser();
           Navigator.pushNamed(context, '/login');
         },
         icon: const Icon(Icons.logout),

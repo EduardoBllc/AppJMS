@@ -20,7 +20,7 @@ class _AppMenuScreenState extends State<AppMenuScreen> {
   int _currentPageIndex = 0;
 
   List<Widget> destinationsList = [
-    const StockPage(),
+    const StockScreen(),
     const CustomersScreen(),
     const Placeholder(),
     const SalesScreen(),

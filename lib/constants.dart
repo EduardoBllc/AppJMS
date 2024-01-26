@@ -38,6 +38,15 @@ ThemeData kAppTheme = ThemeData(
   inputDecorationTheme: kInputDecorationTheme,
   navigationRailTheme: kNavigationRailThemeData,
   bottomAppBarTheme: kBottomAppBarTheme,
+  textTheme: kTextTheme,
+);
+
+TextTheme kTextTheme = const TextTheme(
+  titleLarge: TextStyle(color: Colors.black),
+  titleMedium: TextStyle(color: Colors.black),
+  titleSmall: TextStyle(color: Colors.black),
+  bodyLarge: TextStyle(color: Colors.black),
+  bodyMedium: TextStyle(color: Colors.black),
 );
 
 InputDecorationTheme kInputDecorationTheme = InputDecorationTheme(

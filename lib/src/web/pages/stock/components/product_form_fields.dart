@@ -1,7 +1,7 @@
 import 'package:app_jms/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../../models/product.dart';
+import '../../../../../models/product.dart';
 
 class TextProductFormField extends StatelessWidget {
   const TextProductFormField({
@@ -9,7 +9,6 @@ class TextProductFormField extends StatelessWidget {
     required this.labelText,
     this.hintText,
     this.onChanged,
-    this.flex = 1,
     this.validator,
     this.autovalidateMode = AutovalidateMode.onUserInteraction,
     this.icon,
@@ -20,7 +19,6 @@ class TextProductFormField extends StatelessWidget {
   final String? hintText;
   final void Function(String?)? onChanged;
   final String? Function(String?)? validator;
-  final int flex;
   final AutovalidateMode autovalidateMode;
   final Icon? icon;
   final List<TextInputFormatter>? inputFormatters;
@@ -138,14 +136,13 @@ class DoubleFieldRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(
-          width: MediaQuery.sizeOf(context).width * 0.4,
+        Expanded(
           child: child1,
         ),
-        SizedBox(
-          width: MediaQuery.sizeOf(context).width * 0.4,
+        const SizedBox(width: 20),
+        Expanded(
           child: child2,
         ),
       ],
