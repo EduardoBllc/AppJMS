@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app_jms/services/firebase_services.dart';
-import '../../web/shared/configuration_drawer.dart';
+import '../../app/shared/configuration_drawer.dart';
 import '../reports/reports_screen.dart';
 import '../../app/financial/sales_screen.dart';
 import '../../app/customers/customers_screen.dart';
@@ -27,7 +26,6 @@ class _AppMenuScreenState extends State<AppMenuScreen> {
     const ReportsScreen(),
   ];
 
-  final FirebaseServices _firebaseServices = FirebaseServices();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -39,7 +37,6 @@ class _AppMenuScreenState extends State<AppMenuScreen> {
       appBar: kDefaultAppBar(
         context,
         scaffoldKey: _scaffoldKey,
-        firebaseServices: _firebaseServices,
       ),
       floatingActionButton: kSpeedDial(context),
       bottomNavigationBar: kDefaultNavigationBar(

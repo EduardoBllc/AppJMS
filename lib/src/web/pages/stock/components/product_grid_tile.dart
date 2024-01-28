@@ -2,7 +2,7 @@ import 'package:app_jms/constants.dart';
 import 'package:app_jms/src/shared/colors/stock_elements.dart';
 import 'product_details_dialog.dart';
 import 'package:flutter/material.dart';
-import '../../../../../models/product.dart';
+import '../../../../../models/stock/product.dart';
 
 class ProductGridTile extends StatelessWidget {
   const ProductGridTile({

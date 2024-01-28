@@ -3,7 +3,7 @@ import 'package:app_jms/services/utils.dart';
 import 'package:app_jms/src/shared/colors/stock_elements.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../models/product.dart';
+import '../../../../models/stock/product.dart';
 import '../../../web/shared/modals/default_stack_modal.dart';
 import '../../../web/shared/scaffold_components/show_snack_bar.dart';
 import '../../shared/buttons/rounded_material_button.dart';

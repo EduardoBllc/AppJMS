@@ -1,6 +1,7 @@
+import 'package:app_jms/services/firebase_services/authentication_services.dart';
+
 import '../shared/scaffold_components/navigation_drawer.dart';
 import 'package:flutter/material.dart';
-import '../../../services/firebase_services.dart';
 import '../pages/reports/reports_page.dart';
 import '../pages/financial/sales_page.dart';
 import '../pages/customers/customers_page.dart';
@@ -52,7 +53,7 @@ class _WebMenuPageState extends State<WebMenuPage> {
           IconButton(
             onPressed: () {
               Navigator.pop(context);
-              FirebaseServices.logOutUser();
+              FirebaseAuthServices.logOutUser();
               Navigator.pushNamed(context, '/login');
             },
             icon: const Icon(Icons.logout),

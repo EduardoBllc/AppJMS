@@ -1,6 +1,7 @@
+import 'package:app_jms/services/firebase_services/authentication_services.dart';
 import 'package:app_jms/src/shared/components/loading_widget.dart';
 import 'package:flutter/material.dart';
-import '../../../services/firebase_services.dart';
+import '../../../constants.dart';
 import 'components/log_in_field.dart';
 import '../shared/scaffold_components/show_snack_bar.dart';
 import 'register_modal.dart';
@@ -17,7 +18,6 @@ class AppLogInScreen extends StatefulWidget {
 class _AppLogInScreenState extends State<AppLogInScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final FirebaseServices _services = FirebaseServices();
   bool _loading = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -40,7 +40,7 @@ class _AppLogInScreenState extends State<AppLogInScreen> {
                       TextSpan(
                         children: [
                           const TextSpan(
-                            text: 'Janete Maria\n',
+                            text: 'Janete\n',
                             style: TextStyle(
                               fontFamily: 'MonteCarlo',
                               fontSize: 75,
@@ -50,7 +50,7 @@ class _AppLogInScreenState extends State<AppLogInScreen> {
                           const TextSpan(
                             text: 'Semi',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 24,
                               fontFamily: 'Aboreto',
                               color: Colors.grey,
                             ),
@@ -58,7 +58,7 @@ class _AppLogInScreenState extends State<AppLogInScreen> {
                           TextSpan(
                             text: 'Jóias',
                             style: TextStyle(
-                              fontSize: 30,
+                              fontSize: 24,
                               fontFamily: 'Aboreto',
                               color: Colors.grey.shade600,
                             ),
@@ -79,11 +79,13 @@ class _AppLogInScreenState extends State<AppLogInScreen> {
                               controller: _emailController,
                               validator: (value) {
                                 if (value != null) {
-                                  if (value.isEmpty) {
-                                    return 'Insira o email!';
-                                  }
-                                  if (!value.contains('@jms.com')) {
-                                    return 'Insira um email válido!';
+                                  if (!kDebugMode) {
+                                    if (value.isEmpty) {
+                                      return 'Insira o email!';
+                                    }
+                                    if (!value.contains('@jms.com')) {
+                                      return 'Insira um email válido!';
+                                    }
                                   }
                                 }
                                 return null;
@@ -95,11 +97,13 @@ class _AppLogInScreenState extends State<AppLogInScreen> {
                               isPassword: true,
                               validator: (value) {
                                 if (value != null) {
-                                  if (value.isEmpty) {
-                                    return 'Insira a senha!';
-                                  }
-                                  if (value.length < 6) {
-                                    return 'A senha deve ter pelo menos 6 caracteres!';
+                                  if (!kDebugMode) {
+                                    if (value.isEmpty) {
+                                      return 'Insira a senha!';
+                                    }
+                                    if (value.length < 6) {
+                                      return 'A senha deve ter pelo menos 6 caracteres';
+                                    }
                                   }
                                 }
                                 return null;
@@ -130,8 +134,8 @@ class _AppLogInScreenState extends State<AppLogInScreen> {
                           });
                           String email = _emailController.text;
                           String password = _passwordController.text;
-                          _services
-                              .logInUser(email: email, password: password)
+                          FirebaseAuthServices.logInUser(
+                                  email: email, password: password)
                               .then((String? error) {
                             if (error != null) {
                               setState(() {

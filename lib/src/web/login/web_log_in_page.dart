@@ -1,5 +1,6 @@
+import 'package:app_jms/services/firebase_services/authentication_services.dart';
 import 'package:flutter/material.dart';
-import '../../../services/firebase_services.dart';
+import '../../../constants.dart';
 import 'components/log_in_field.dart';
 import '../shared/scaffold_components/show_snack_bar.dart';
 import 'register_modal.dart';
@@ -16,7 +17,6 @@ class WebLogInPage extends StatefulWidget {
 class _WebLogInPageState extends State<WebLogInPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final FirebaseServices _services = FirebaseServices();
   bool _loading = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -32,8 +32,7 @@ class _WebLogInPageState extends State<WebLogInPage> {
         });
         String email = _emailController.text;
         String password = _passwordController.text;
-        _services
-            .logInUser(email: email, password: password)
+        FirebaseAuthServices.logInUser(email: email, password: password)
             .then((String? error) {
           if (error != null) {
             setState(() {
@@ -80,7 +79,7 @@ class _WebLogInPageState extends State<WebLogInPage> {
                           TextSpan(
                             text: 'Semijoias',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 24,
                               fontFamily: 'Aboreto',
                               color: Colors.black,
                             ),
@@ -103,11 +102,13 @@ class _WebLogInPageState extends State<WebLogInPage> {
                               autofocus: true,
                               validator: (value) {
                                 if (value != null) {
-                                  if (value.isEmpty) {
-                                    return 'Insira o email!';
-                                  }
-                                  if (!value.contains('@jms.com')) {
-                                    return 'Insira um email válido!';
+                                  if (!kDebugMode) {
+                                    if (value.isEmpty) {
+                                      return 'Insira o email!';
+                                    }
+                                    if (!value.contains('@jms.com')) {
+                                      return 'Insira um email válido!';
+                                    }
                                   }
                                 }
                                 return null;
@@ -121,11 +122,13 @@ class _WebLogInPageState extends State<WebLogInPage> {
                               lastField: true,
                               validator: (value) {
                                 if (value != null) {
-                                  if (value.isEmpty) {
-                                    return 'Insira a senha!';
-                                  }
-                                  if (value.length < 6) {
-                                    return 'A senha deve ter pelo menos 6 caracteres';
+                                  if (!kDebugMode) {
+                                    if (value.isEmpty) {
+                                      return 'Insira a senha!';
+                                    }
+                                    if (value.length < 6) {
+                                      return 'A senha deve ter pelo menos 6 caracteres';
+                                    }
                                   }
                                 }
                                 return null;

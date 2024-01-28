@@ -2,7 +2,7 @@ import 'package:app_jms/src/shared/default_box_shadow.dart';
 import 'package:app_jms/src/shared/styles/default_elevated_button_style.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../../models/product.dart';
+import '../../../../../models/stock/product.dart';
 import '../../../../../services/controllers/showcase_manager.dart';
 import '../../../../../services/utils.dart';
 import '../../../../app/shared/scaffold_components/show_snack_bar.dart';

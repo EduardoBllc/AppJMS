@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+
+const bool kDebugMode = true;
 
 const Color kModalBackgroundColor = Color(0xff737373);
 
@@ -97,7 +101,8 @@ BottomAppBarTheme kBottomAppBarTheme = const BottomAppBarTheme(
   shape: CircularNotchedRectangle(),
 );
 
-NavigationRailThemeData kNavigationRailThemeData = NavigationRailThemeData();
+NavigationRailThemeData kNavigationRailThemeData =
+    const NavigationRailThemeData();
 
 FloatingActionButtonThemeData kFABTheme = FloatingActionButtonThemeData(
   backgroundColor: Colors.grey.shade800,
@@ -105,3 +110,15 @@ FloatingActionButtonThemeData kFABTheme = FloatingActionButtonThemeData(
 );
 
 Color kCreamColor = const Color(0Xfff0ede5);
+
+DateFormat brazilianDateFormatter = DateFormat('dd/MM/yyyy');
+
+MaskTextInputFormatter cellphoneMask = MaskTextInputFormatter(
+  mask: '(##) #####-####',
+  filter: {'#': RegExp(r'\d')},
+);
+
+MaskTextInputFormatter phoneMask = MaskTextInputFormatter(
+  mask: '(##) ####-####',
+  filter: {'#': RegExp(r'\d')},
+);

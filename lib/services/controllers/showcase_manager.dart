@@ -1,12 +1,16 @@
 import 'dart:developer';
+import 'package:app_jms/services/firebase_services/stock_services.dart';
 import 'package:app_jms/services/utils.dart';
 import 'package:flutter/cupertino.dart';
-import '../../models/product.dart';
-import '../../models/supplier.dart';
-import '../firebase_services.dart';
+import '../../models/utils/enums/category.dart';
+import '../../models/utils/enums/metal.dart';
+import '../../models/utils/enums/modality.dart';
+import '../../models/stock/product.dart';
+import '../../models/stock/supplier.dart';
+import '../firebase_services/generic_services.dart';
 
 class ShowcaseManager extends ChangeNotifier {
-  final FirebaseServices _firebaseServices = FirebaseServices();
+  FirebaseStockServices stockServices = FirebaseStockServices();
 
   final List<Product> _productsList = [];
   final List<Supplier> _supplierList = [
@@ -16,6 +20,8 @@ class ShowcaseManager extends ChangeNotifier {
   ];
 
   List<Supplier> get supplierList => List.unmodifiable(_supplierList);
+
+  List<Product> get productList => List.unmodifiable(_productsList);
 
   void addSupplier(Supplier supplier) {
     _supplierList.add(supplier);
@@ -27,10 +33,8 @@ class ShowcaseManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<Product> get productList => List.unmodifiable(_productsList);
-
   void getProducts() async {
-    var allDocs = await _firebaseServices.getAllCollectionDocs('produtos');
+    var allDocs = await FirebaseServices.getAllCollectionDocs('produtos');
     _productsList.clear();
 
     for (var doc in allDocs!) {
@@ -42,7 +46,7 @@ class ShowcaseManager extends ChangeNotifier {
       _productsList.add(
         Product(
           id: doc['id'],
-          supplier: supplierList.firstWhere(
+          supplier: _supplierList.firstWhere(
               (element) => element.name == doc['dados_fabrica']['nome']),
           supplierCode: doc['dados_fabrica']['codigo'].toString(),
           category: category,
@@ -60,7 +64,7 @@ class ShowcaseManager extends ChangeNotifier {
   Future<void> registerProduct({
     required Supplier supplier,
     required String supplierCode,
-    Modality? modality = Modality.adult,
+    Modality modality = Modality.adult,
     required Category category,
     Metal metal = Metal.gold,
     required String description,
@@ -70,23 +74,25 @@ class ShowcaseManager extends ChangeNotifier {
     required DateTime boughtDate,
   }) async {
     try {
-      int actualKey = (await _firebaseServices.getNextCode('produtos'))!;
-      Product newProduct = Product(
-        id: actualKey,
+      Product? newProduct = await stockServices.createProduct(
+        boughtDate: boughtDate,
         supplier: supplier,
         supplierCode: supplierCode,
+        modality: modality,
         category: category,
+        metal: metal,
         description: description,
         cost: cost,
         aVista: aVista,
         aPrazo: aPrazo,
-        boughtDate: boughtDate,
       );
-
-      await _firebaseServices.addProduct(newProduct);
       log('Adicionando nova peça na lista de produtos');
-      _productsList.add(newProduct);
-      notifyListeners();
+      if (newProduct != null) {
+        _productsList.add(newProduct);
+        notifyListeners();
+      } else {
+        throw Exception('Erro ao registrar produto');
+      }
     } catch (e) {
       log(e.toString());
     }
@@ -94,7 +100,7 @@ class ShowcaseManager extends ChangeNotifier {
 
   Future<String?> removeProduct(int productId) async {
     try {
-      await _firebaseServices.removeProduct(productId);
+      await stockServices.deleteProduct(productId);
       log('Removendo peça da lista de produtos');
       _productsList.remove(
         _productsList.firstWhere((element) => element.id == productId),

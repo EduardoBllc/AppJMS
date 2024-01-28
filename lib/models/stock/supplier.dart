@@ -1,4 +1,4 @@
-import 'package:app_jms/models/product.dart';
+import '../utils/mixins/with_name.dart';
 
 class Supplier extends WithName {
   Supplier({

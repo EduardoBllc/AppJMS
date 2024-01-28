@@ -1,6 +1,6 @@
 import 'package:app_jms/constants.dart';
-import 'package:app_jms/services/firebase_services.dart';
 import 'package:flutter/material.dart';
+import '../../../services/firebase_services/authentication_services.dart';
 import 'components/log_in_field.dart';
 
 class RegisterModal extends StatefulWidget {
@@ -23,7 +23,7 @@ class _RegisterModalState extends State<RegisterModal> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final FirebaseServices _services = FirebaseServices();
+  final FirebaseAuthServices _authServices = FirebaseAuthServices();
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +98,7 @@ class _RegisterModalState extends State<RegisterModal> {
                     onPressed: () {
                       String username = _usernameController.text;
                       if (_formKey.currentState!.validate()) {
-                        _services.createNewUser(
+                        _authServices.createNewUser(
                           username,
                           widget.userEmail,
                           widget.userPassword,

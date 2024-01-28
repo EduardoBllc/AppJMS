@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../../services/firebase_services.dart';
+import '../../../services/firebase_services/authentication_services.dart';
 import 'scaffold_components/navigation_drawer.dart';
 
 class WebScaffold extends StatelessWidget {
@@ -53,7 +52,7 @@ class WebScaffold extends StatelessWidget {
           IconButton(
             onPressed: () {
               Navigator.pop(context);
-              FirebaseServices.logOutUser();
+              FirebaseAuthServices.logOutUser();
               Navigator.pushNamed(context, '/login');
             },
             icon: const Icon(Icons.logout),

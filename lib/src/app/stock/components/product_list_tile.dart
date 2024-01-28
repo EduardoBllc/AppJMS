@@ -1,6 +1,6 @@
 import 'package:app_jms/constants.dart';
 import 'package:flutter/material.dart';
-import '../../../../models/product.dart';
+import '../../../../models/stock/product.dart';
 import '../../../../services/utils.dart';
 import 'product_details_modal.dart';
 

@@ -1,0 +1,69 @@
+import 'package:flutter/material.dart';
+
+import '../../../../../models/customers/customer.dart';
+
+class CustomerCard extends StatelessWidget {
+  const CustomerCard({super.key, required this.customer});
+
+  final Customer customer;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 120,
+      decoration: BoxDecoration(
+        color: const Color(0xFFF5F5F5),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            child: CircleAvatar(
+              radius: 40,
+              foregroundImage:
+                  const AssetImage('assets/images/avatar_default.png'),
+              backgroundColor: Colors.grey[600],
+            ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                customer.name,
+                style: const TextStyle(fontSize: 18),
+              ),
+              Text(
+                customer.id.toString(),
+                style: TextStyle(color: Colors.grey.shade600),
+              ),
+            ],
+          ),
+          if (MediaQuery.sizeOf(context).width > 1300)
+            Padding(
+              padding: const EdgeInsets.only(left: 30),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                      'Contato: ${customer.cellphone != null ? customer.maskedCellphone : customer.email ?? ''}'),
+                  const SizedBox(height: 15),
+                  Text('Aniversário: ${customer.formattedBirthday}'),
+                ],
+              ),
+            ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30),
+            child: VerticalDivider(
+              color: Color(0xFFd9d9d9),
+              indent: 15,
+              endIndent: 15,
+              thickness: 1.5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

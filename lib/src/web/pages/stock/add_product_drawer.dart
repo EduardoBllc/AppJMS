@@ -1,6 +1,5 @@
-import 'dart:developer';
 import 'package:app_jms/constants.dart';
-import 'package:app_jms/models/supplier.dart';
+import 'package:app_jms/models/stock/supplier.dart';
 import 'package:app_jms/services/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,7 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:date_field/date_field.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
-import '../../../../models/product.dart';
+import '../../../../models/utils/enums/category.dart';
+import '../../../../models/utils/enums/metal.dart';
+import '../../../../models/utils/enums/modality.dart';
 import '../../../../services/controllers/showcase_manager.dart';
 import '../../../app/shared/buttons/rounded_material_button.dart';
 import '../../../app/shared/scaffold_components/show_snack_bar.dart';
@@ -55,7 +56,8 @@ class _AddProductDrawerState extends State<AddProductDrawer> {
             children: [
               Padding(
                 padding: EdgeInsets.only(
-                    bottom: MediaQuery.sizeOf(context).height * 0.1),
+                  bottom: MediaQuery.sizeOf(context).height * 0.1,
+                ),
                 child: const Text(
                   'Cadastro de Peças',
                   textAlign: TextAlign.center,

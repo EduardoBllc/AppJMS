@@ -23,7 +23,7 @@ class _RouterScreenState extends State<RouterScreen> {
         Navigator.pushNamed(context, route);
       } else {
         route = kIsWeb ? '/login' : '/app/login';
-        Navigator.pushNamed(context, '/login');
+        Navigator.pushNamed(context, route);
       }
     });
   }

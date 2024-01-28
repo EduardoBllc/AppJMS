@@ -6,6 +6,7 @@ import 'package:app_jms/src/app/menu/app_menu_screen.dart';
 import 'package:app_jms/src/app/stock/add_product_screen.dart';
 import 'package:app_jms/src/web/login/web_log_in_page.dart';
 import 'package:app_jms/src/web/menu/web_menu_page.dart';
+import 'package:app_jms/src/web/pages/customers/customers_page.dart';
 import 'package:flutter/material.dart';
 import 'constants.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +33,7 @@ class JmsApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        initialRoute: '/',
+        initialRoute: '/#/',
         routes: {
           RouterScreen.id: (_) => const RouterScreen(),
           WebMenuPage.id: (_) => const WebMenuPage(),
@@ -40,6 +41,7 @@ class JmsApp extends StatelessWidget {
           AppMenuScreen.id: (_) => const AppMenuScreen(),
           AppLogInScreen.id: (_) => const AppLogInScreen(),
           AddProductScreen.id: (_) => const AddProductScreen(),
+          CustomersPage.id: (_) => const CustomersPage(),
         },
         themeMode: ThemeMode.light,
         theme: kAppTheme,

@@ -1,7 +1,7 @@
 import 'package:app_jms/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../../../models/product.dart';
+import '../../../../../models/utils/mixins/with_name.dart';
 
 class TextProductFormField extends StatelessWidget {
   const TextProductFormField({

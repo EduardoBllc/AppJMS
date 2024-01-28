@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:app_jms/constants.dart';
-import 'package:app_jms/models/supplier.dart';
-import 'package:app_jms/services/firebase_services.dart';
+import 'package:app_jms/models/stock/supplier.dart';
 import 'package:app_jms/services/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:date_field/date_field.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
-import '../../../models/product.dart';
+import '../../../models/utils/enums/category.dart';
+import '../../../models/utils/enums/metal.dart';
+import '../../../models/utils/enums/modality.dart';
 import '../../../services/controllers/showcase_manager.dart';
 import '../../web/shared/buttons/rounded_material_button.dart';
 import '../shared/configuration_drawer.dart';
@@ -41,8 +42,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
   late Metal metal;
   late Modality modality;
 
-  final FirebaseServices _firebaseServices = FirebaseServices();
-
   final GlobalKey<FormState> _productFormKey = GlobalKey<FormState>();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -55,7 +54,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
       appBar: kDefaultAppBar(
         context,
         backgroundColor: const Color(0xff131313),
-        firebaseServices: _firebaseServices,
         scaffoldKey: _scaffoldKey,
         automaticallyImplyLeading: true,
       ),

@@ -1,6 +1,6 @@
 import 'package:app_jms/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:app_jms/models/product.dart';
+import 'package:app_jms/models/stock/product.dart';
 import 'package:provider/provider.dart';
 import '../../../services/controllers/showcase_manager.dart';
 import 'components/product_list_tile.dart';

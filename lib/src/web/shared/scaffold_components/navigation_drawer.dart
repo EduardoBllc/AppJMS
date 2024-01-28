@@ -17,7 +17,10 @@ class MenuNavigationDrawer extends StatelessWidget {
     );
 
     return Container(
-      constraints: const BoxConstraints(minWidth: 50, maxWidth: 400),
+      constraints: BoxConstraints(
+        minWidth: 50,
+        maxWidth: MediaQuery.sizeOf(context).width * 0.2,
+      ),
       color: Colors.white,
       child: ListView(
         children: [
@@ -32,7 +35,7 @@ class MenuNavigationDrawer extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   child: CircleAvatar(
-                    radius: 80,
+                    radius: MediaQuery.sizeOf(context).height * 0.07,
                     foregroundImage:
                         const AssetImage('assets/images/avatar_default.png'),
                     backgroundColor: Colors.grey[600],
@@ -51,22 +54,22 @@ class MenuNavigationDrawer extends StatelessWidget {
             padding: const EdgeInsets.only(top: 15),
             child: separatorDivider,
           ),
-          const NavigationTile(
+          NavigationTile(
             icon: Icons.diamond_outlined,
             pageName: 'Estoque',
-            pageWidget: StockPage(),
+            pageRoute: StockPage.id,
           ),
           separatorDivider,
-          const NavigationTile(
+          NavigationTile(
             pageName: 'Financeiro',
             icon: Icons.account_balance_wallet_outlined,
-            pageWidget: SalesPage(),
+            pageRoute: SalesPage.id,
           ),
           separatorDivider,
-          const NavigationTile(
+          NavigationTile(
             pageName: 'Clientes',
             icon: Icons.groups_outlined,
-            pageWidget: CustomersPage(),
+            pageRoute: CustomersPage.id,
           ),
         ],
       ),
@@ -75,24 +78,25 @@ class MenuNavigationDrawer extends StatelessWidget {
 }
 
 class NavigationTile extends StatelessWidget {
-  const NavigationTile(
-      {super.key,
-      required this.pageName,
-      required this.icon,
-      required this.pageWidget});
+  const NavigationTile({
+    super.key,
+    required this.pageName,
+    required this.icon,
+    required this.pageRoute,
+  });
 
   final String pageName;
   final IconData icon;
-  final Widget pageWidget;
+  final String pageRoute;
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
       style: const ButtonStyle(enableFeedback: false),
       onPressed: () {
-        Navigator.push(
+        Navigator.pushNamed(
           context,
-          MaterialPageRoute(builder: (context) => pageWidget),
+          pageRoute,
         );
       },
       child: SizedBox(

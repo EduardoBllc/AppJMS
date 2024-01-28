@@ -1,14 +1,12 @@
+import 'package:app_jms/services/firebase_services/authentication_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-
 import '../../../../constants.dart';
-import '../../../../services/firebase_services.dart';
 
 AppBar kDefaultAppBar(
   BuildContext context, {
   required GlobalKey<ScaffoldState> scaffoldKey,
-  required FirebaseServices firebaseServices,
   bool automaticallyImplyLeading = false,
   Color? backgroundColor,
 }) {
@@ -65,7 +63,7 @@ AppBar kDefaultAppBar(
       IconButton(
         onPressed: () {
           Navigator.pop(context);
-          FirebaseServices.logOutUser();
+          FirebaseAuthServices.logOutUser();
           Navigator.pushNamed(context, '/login');
         },
         icon: const Icon(Icons.logout),
