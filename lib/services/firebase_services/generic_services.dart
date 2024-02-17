@@ -23,8 +23,8 @@ abstract class FirebaseServices {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     log('Buscando todos os documentos da coleçao $collectionName');
     try {
-      var allDocs = await firestore.collection('produtos').get();
-      log('Foram encontrados ${allDocs.docs.length} documentos');
+      var allDocs = await firestore.collection(collectionName).get();
+      log('Foram encontrados ${allDocs.docs.length} documentos da tanela $collectionName');
       return allDocs.docs;
     } on FirebaseException catch (e) {
       log('Erro ao procurar documentos');
@@ -39,7 +39,7 @@ abstract class FirebaseServices {
     try {
       return firestore.collection('controle');
     } on FirebaseException catch (e) {
-      log('Erro ao capturar próximo código');
+      log('Erro ao acessar a tabela de controle');
       firebaseErrorLogger(e);
       return null;
     }

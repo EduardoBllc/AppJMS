@@ -2,7 +2,8 @@ import '../mixins/with_name.dart';
 
 enum Metal implements WithName {
   gold('Ouro'),
-  silver('Prata');
+  silver('Prata'),
+  none('Nenhum');
 
   const Metal(this.name);
 

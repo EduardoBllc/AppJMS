@@ -1,12 +1,14 @@
 import 'package:app_jms/constants.dart';
 import 'package:app_jms/src/web/pages/stock/add_product_drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:app_jms/models/stock/product.dart';
+import 'package:app_jms/models/stock/stock_models.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
 import '../../../../services/controllers/showcase_manager.dart';
 import '../../shared/web_default_scaffold.dart';
+import 'components/filter_dropdown.dart';
 import 'components/product_grid_tile.dart';
+import '../../../../models/utils/stock_enums.dart';
 
 class StockPage extends StatefulWidget {
   const StockPage({super.key});
@@ -18,18 +20,24 @@ class StockPage extends StatefulWidget {
 }
 
 class _StockPageState extends State<StockPage> {
-  late List<Product> productList;
+  late List<Product> productsList;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  @override
-  void initState() {
-    Provider.of<ShowcaseManager>(context, listen: false).getProducts();
-    super.initState();
-  }
+  Category filterCategory = Category.none;
+  Modality filterModality = Modality.none;
+  Metal filterMetal = Metal.none;
+  String filterDescription = '';
 
   @override
   Widget build(BuildContext context) {
-    productList = Provider.of<ShowcaseManager>(context).productList;
+    productsList = Provider.of<ShowcaseManager>(context).productList;
+    StockFilter filter = StockFilter(
+      productsList,
+      category: filterCategory,
+      modality: filterModality,
+      metal: filterMetal,
+      description: filterDescription,
+    );
+    List<Product> filteredProducts = filter.filterItems;
 
     return WebScaffold(
       scaffoldKey: _scaffoldKey,
@@ -39,7 +47,6 @@ class _StockPageState extends State<StockPage> {
           borderRadius: BorderRadius.circular(10),
         ),
         onPress: () {
-          print(_scaffoldKey.currentState);
           _scaffoldKey.currentState!.openEndDrawer();
         },
         child: const Icon(
@@ -47,22 +54,115 @@ class _StockPageState extends State<StockPage> {
           size: 40,
         ),
       ),
-      body: RefreshIndicator(
-        backgroundColor: kColorScheme.surface,
-        onRefresh: () async {
-          Provider.of<ShowcaseManager>(context, listen: false).getProducts();
-        },
-        child: GridView.builder(
-          itemCount: productList.length,
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          itemBuilder: (context, index) {
-            return ProductGridTile(product: productList[index]);
-          },
-          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 250,
-            mainAxisExtent: 250,
+      body: Column(
+        children: [
+          Container(
+            height: 70,
+            decoration: BoxDecoration(
+              color: kCreamColor,
+              boxShadow: const [
+                BoxShadow(
+                    color: Color(0x3f000000),
+                    offset: Offset(0, 2),
+                    blurRadius: 2),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: MediaQuery.sizeOf(context).width * 0.3,
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      prefixIcon: Icon(Icons.search),
+                      hintText: 'Pesquisar produtos',
+                      border: UnderlineInputBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(6),
+                        ),
+                      ),
+                    ),
+                    onChanged: (description) {
+                      setState(() {
+                        filterDescription = description;
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(width: 20),
+                FilterDropdown<Category>(
+                  label: 'Category',
+                  icon: const Icon(Icons.category_outlined),
+                  items: Category.values
+                      .map<DropdownMenuItem<Category>>(
+                        (category) => DropdownMenuItem<Category>(
+                          value: category,
+                          child: Text(category.name),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (category) {
+                    setState(() {
+                      filterCategory = category ?? Category.none;
+                    });
+                  },
+                ),
+                const SizedBox(width: 20),
+                FilterDropdown<Metal>(
+                  icon: const Icon(Icons.texture_outlined),
+                  label: 'Metal',
+                  items: Metal.values
+                      .map<DropdownMenuItem<Metal>>(
+                        (metal) => DropdownMenuItem<Metal>(
+                          value: metal,
+                          child: Text(metal.name),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (metal) {
+                    setState(() {
+                      filterMetal = metal ?? Metal.none;
+                    });
+                  },
+                ),
+                const SizedBox(width: 20),
+                FilterDropdown(
+                  width: 170,
+                  icon: const Icon(Icons.family_restroom_outlined),
+                  label: 'Modalidade',
+                  items: Modality.values
+                      .map<DropdownMenuItem<Modality>>(
+                        (modality) => DropdownMenuItem<Modality>(
+                          value: modality,
+                          child: Text(modality.name),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (modality) {
+                    setState(() {
+                      filterModality = modality ?? Modality.none;
+                    });
+                  },
+                )
+              ],
+            ),
           ),
-        ),
+          Expanded(
+            child: GridView.builder(
+              itemCount: filteredProducts.length,
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              itemBuilder: (context, index) {
+                return ProductGridTile(product: filteredProducts[index]);
+              },
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 250,
+                mainAxisExtent: 250,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

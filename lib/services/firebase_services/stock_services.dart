@@ -8,7 +8,12 @@ import '../../models/stock/supplier.dart';
 import 'generic_services.dart';
 
 class FirebaseStockServices extends FirebaseServices {
-  Future<Product?> createProduct({
+  static Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>?>
+      fetchProducts() async {
+    return await FirebaseServices.getAllCollectionDocs('produtos');
+  }
+
+  Future<Product?> registerProduct({
     required DateTime boughtDate,
     required Supplier supplier,
     required String supplierCode,
@@ -43,7 +48,7 @@ class FirebaseStockServices extends FirebaseServices {
     try {
       await firestore
           .collection('produtos')
-          .doc(newProduct.id.toString())
+          .doc(newProductId.toString())
           .set(productMap);
       await stepInCode('produtos');
       return newProduct;

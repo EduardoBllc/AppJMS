@@ -7,7 +7,6 @@ import '../../models/utils/enums/metal.dart';
 import '../../models/utils/enums/modality.dart';
 import '../../models/stock/product.dart';
 import '../../models/stock/supplier.dart';
-import '../firebase_services/generic_services.dart';
 
 class ShowcaseManager extends ChangeNotifier {
   FirebaseStockServices stockServices = FirebaseStockServices();
@@ -34,7 +33,7 @@ class ShowcaseManager extends ChangeNotifier {
   }
 
   void getProducts() async {
-    var allDocs = await FirebaseServices.getAllCollectionDocs('produtos');
+    var allDocs = await FirebaseStockServices.fetchProducts();
     _productsList.clear();
 
     for (var doc in allDocs!) {
@@ -61,7 +60,7 @@ class ShowcaseManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> registerProduct({
+  Future<void> createProduct({
     required Supplier supplier,
     required String supplierCode,
     Modality modality = Modality.adult,
@@ -74,7 +73,7 @@ class ShowcaseManager extends ChangeNotifier {
     required DateTime boughtDate,
   }) async {
     try {
-      Product? newProduct = await stockServices.createProduct(
+      Product? newProduct = await stockServices.registerProduct(
         boughtDate: boughtDate,
         supplier: supplier,
         supplierCode: supplierCode,

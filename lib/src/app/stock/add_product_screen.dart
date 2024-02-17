@@ -307,7 +307,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
                                   Provider.of<ShowcaseManager>(context,
                                           listen: false)
-                                      .registerProduct(
+                                      .createProduct(
                                     supplier: supplier,
                                     supplierCode: supplierCode,
                                     category: category,

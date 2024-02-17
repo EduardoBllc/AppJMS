@@ -2,7 +2,8 @@ import '../mixins/with_name.dart';
 
 enum Modality implements WithName {
   child('Infantil'),
-  adult('Adulto');
+  adult('Adulto'),
+  none('Nenhum');
 
   const Modality(this.name);
 

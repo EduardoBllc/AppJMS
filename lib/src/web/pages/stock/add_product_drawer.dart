@@ -32,7 +32,10 @@ class _AddProductDrawerState extends State<AddProductDrawer> {
   late DateTime boughtDate;
 
   final CurrencyTextInputFormatter moneyFormatter = CurrencyTextInputFormatter(
-      locale: 'pt-br', decimalDigits: 2, symbol: 'R\$');
+    locale: 'pt-br',
+    decimalDigits: 2,
+    symbol: 'R\$',
+  );
 
   late Supplier supplier;
   late Category category;
@@ -313,7 +316,7 @@ class _AddProductDrawerState extends State<AddProductDrawer> {
                   onTap: () {
                     if (_productFormKey.currentState!.validate()) {
                       Provider.of<ShowcaseManager>(context, listen: false)
-                          .registerProduct(
+                          .createProduct(
                         supplier: supplier,
                         supplierCode: supplierCode,
                         category: category,

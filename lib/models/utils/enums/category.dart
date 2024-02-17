@@ -5,7 +5,8 @@ enum Category implements WithName {
   earring('Brinco', 'assets/images/brincos.png'),
   necklace('Colar', 'assets/images/colar.png'),
   bracelet('Bracelete', 'assets/images/pulseira.png'),
-  pendant('Pingente', 'assets/images/pingente.png');
+  pendant('Pingente', 'assets/images/pingente.png'),
+  none('Nenhum', '');
 
   const Category(this.name, this.path);
 
