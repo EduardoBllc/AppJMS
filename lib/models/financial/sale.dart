@@ -8,22 +8,27 @@ class Sale implements Registerable {
     required this.customer,
     required this.id,
     required this.saleDate,
-    required Product firstProduct,
+    required ProductSale firstProduct,
   }) {
-    products.add(firstProduct);
+    _products.add(firstProduct);
+    total = firstProduct.total;
   }
 
   final int id;
   final Customer customer;
   final DateTime saleDate;
-  List<Product> products = [];
+  final List<ProductSale> _products = [];
   double amountPaid = 0;
   double total = 0;
 
   bool get paid => total - amountPaid <= 0;
 
   List<int> get productsId =>
-      products.map<int>((product) => product.id).toList();
+      _products.map<int>((product) => product.id).toList();
+
+  void addProduct(ProductSale product) {
+    _products.add(product);
+  }
 
   @override
   String get log => 'Venda id $id para cliente $customer no total de R\$$total';
@@ -48,13 +53,10 @@ class ProductSale {
     required this.paymentType,
     required this.product,
   }) {
-    if (paymentType == PaymentType.money ||
-        paymentType == PaymentType.pix ||
-        paymentType == PaymentType.debitCard) {
-      total = product.aVista;
-    } else {
-      total = product.aPrazo;
-    }
+    total = paymentType == PaymentType.creditCard ||
+            paymentType == PaymentType.installment
+        ? total = product.aVista
+        : product.aPrazo;
   }
   final int id;
   final Customer customer;

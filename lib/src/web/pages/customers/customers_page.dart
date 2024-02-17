@@ -1,8 +1,14 @@
+import 'package:app_jms/models/financial/sale.dart';
+import 'package:app_jms/models/utils/enums/payment_type.dart';
+import 'package:app_jms/services/controllers/customers_caretaker.dart';
+import 'package:app_jms/services/controllers/showcase_manager.dart';
 import 'package:app_jms/src/web/pages/customers/components/customer_card.dart';
 import 'package:app_jms/src/web/shared/web_default_scaffold.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../models/customers/customer.dart';
+import '../../../../models/stock/product.dart';
 
 class CustomersPage extends StatelessWidget {
   const CustomersPage({super.key});
@@ -11,14 +17,24 @@ class CustomersPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Customer> customerList = [
-      Customer(
+    List<Customer> customerList =
+        Provider.of<CustomersCaretaker>(context).customersList;
+
+    List<Product> productList =
+        Provider.of<ShowcaseManager>(context).productList;
+
+    customerList[0].lastPurchase = Sale(
+      customer: customerList[0],
+      id: 0,
+      saleDate: DateTime(2023, 10, 12),
+      firstProduct: ProductSale(
         id: 0,
-        name: 'Eduardo Salvagni Ballico',
-        birthday: DateTime(2002, 9, 19),
-        cellphone: 54996758088,
+        customer: customerList[0],
+        saleDay: DateTime.now(),
+        paymentType: PaymentType.money,
+        product: productList[0],
       ),
-    ];
+    );
 
     return WebScaffold(
       body: Padding(
@@ -36,30 +52,11 @@ class CustomersPage extends StatelessWidget {
                   itemCount: customerList.length,
                   padding: const EdgeInsets.symmetric(
                     vertical: 20,
-                    horizontal: 10,
+                    horizontal: 30,
                   ),
                   itemBuilder: (context, index) {
                     return CustomerCard(customer: customerList[index]);
                   },
-                ),
-              ),
-            ),
-            const SizedBox(width: 30),
-            Expanded(
-              flex: 1,
-              child: Container(
-                margin: const EdgeInsets.symmetric(vertical: 30),
-                decoration: BoxDecoration(
-                  color: const Color(0xfff5f5f5),
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: const [
-                    BoxShadow(
-                      offset: Offset(3, 3),
-                      blurRadius: 3,
-                      spreadRadius: 1,
-                      color: Color(0x30000000),
-                    ),
-                  ],
                 ),
               ),
             ),

@@ -1,4 +1,5 @@
 import 'package:app_jms/services/controllers/connection_provider.dart';
+import 'package:app_jms/services/controllers/customers_caretaker.dart';
 import 'package:app_jms/services/login_router.dart';
 import 'package:app_jms/services/controllers/showcase_manager.dart';
 import 'package:app_jms/src/app/login/app_log_in_screen.dart';
@@ -32,6 +33,8 @@ class JmsApp extends StatelessWidget {
             create: (_) => ShowcaseManager()),
         ChangeNotifierProvider<ConnectionProvider>(
             create: (_) => ConnectionProvider()),
+        ChangeNotifierProvider<CustomersCaretaker>(
+            create: (_) => CustomersCaretaker()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -7,9 +7,12 @@ class Customer implements Registerable {
     required this.id,
     required this.name,
     required this.birthday,
+    required this.registerDate,
     this.whatsapp,
     this.email,
     this.cellphone,
+    this.lastPurchaseId,
+    this.lastPurchase,
   }) {
     if (whatsapp == null && cellphone != null) {
       whatsapp = cellphone;
@@ -18,18 +21,35 @@ class Customer implements Registerable {
 
   final int id;
   final String name;
-  late final DateTime _registerDate;
+  late final DateTime registerDate;
   final DateTime birthday;
-  Sale? lastSale;
+  int? lastPurchaseId;
+  Sale? lastPurchase;
   int? whatsapp;
   int? cellphone;
   String? email;
 
-  DateTime get registerDate => _registerDate;
-
   String get formattedBirthday => brazilianDateFormatter.format(birthday);
 
   String get maskedCellphone => cellphoneMask.maskText(cellphone.toString());
+
+  String get timeSinceLastPurchase {
+    if (lastPurchase == null) {
+      return 'cliente ainda não possui compras';
+    }
+    int timeDifferenceInDays =
+        DateTime.now().difference(lastPurchase!.saleDate).inDays;
+
+    if (timeDifferenceInDays > 60) {
+      if (timeDifferenceInDays % 30 != 0) {
+        return '${timeDifferenceInDays ~/ 30} meses e ${timeDifferenceInDays % 30} dias';
+      } else {
+        return '${timeDifferenceInDays / 30} meses';
+      }
+    } else {
+      return '$timeDifferenceInDays dias';
+    }
+  }
 
   @override
   String toString() => name;
@@ -46,6 +66,6 @@ class Customer implements Registerable {
         'whatsapp': whatsapp,
         'email': email,
         'data_aniversário': birthday,
-        'data_registro': _registerDate,
+        'data_registro': registerDate,
       };
 }
