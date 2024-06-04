@@ -17,11 +17,11 @@ class CustomersPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Customer> customerList =
-        Provider.of<CustomersCaretaker>(context).customersList;
+    print(MediaQuery.sizeOf(context).width);
 
-    List<Product> productList =
-        Provider.of<ShowcaseManager>(context).productList;
+    List<Customer> customerList = Provider.of<CustomersCaretaker>(context).customersList;
+
+    List<Product> productList = Provider.of<ShowcaseManager>(context).productList;
 
     customerList[0].lastPurchase = Sale(
       customer: customerList[0],
@@ -38,11 +38,15 @@ class CustomersPage extends StatelessWidget {
 
     return WebScaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Row(
           children: [
             Expanded(
               flex: 3,
+              child: Container(),
+            ),
+            Expanded(
+              flex: 4,
               child: Container(
                 decoration: const BoxDecoration(
                   color: Color(0xffDEDEDE),

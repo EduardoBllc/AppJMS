@@ -21,21 +21,26 @@ class StockPage extends StatefulWidget {
 
 class _StockPageState extends State<StockPage> {
   late List<Product> productsList;
+  late List<Supplier> suppliersList;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Category filterCategory = Category.none;
   Modality filterModality = Modality.none;
   Metal filterMetal = Metal.none;
   String filterDescription = '';
+  Supplier? filterSupplier;
 
   @override
   Widget build(BuildContext context) {
+    suppliersList = Provider.of<ShowcaseManager>(context).supplierList;
     productsList = Provider.of<ShowcaseManager>(context).productList;
+
     StockFilter filter = StockFilter(
       productsList,
       category: filterCategory,
       modality: filterModality,
       metal: filterMetal,
       description: filterDescription,
+      supplier: filterSupplier,
     );
     List<Product> filteredProducts = filter.filterItems;
 
@@ -93,7 +98,7 @@ class _StockPageState extends State<StockPage> {
                 ),
                 const SizedBox(width: 20),
                 FilterDropdown<Category>(
-                  label: 'Category',
+                  label: 'Categoria',
                   icon: const Icon(Icons.category_outlined),
                   items: Category.values
                       .map<DropdownMenuItem<Category>>(
@@ -145,7 +150,30 @@ class _StockPageState extends State<StockPage> {
                       filterModality = modality ?? Modality.none;
                     });
                   },
-                )
+                ),
+                const SizedBox(width: 20),
+                FilterDropdown<Supplier>(
+                  label: 'Fábrica',
+                  icon: const Icon(Icons.category_outlined),
+                  items: Provider.of<ShowcaseManager>(context, listen: false)
+                      .supplierList
+                      .map<DropdownMenuItem<Supplier>>(
+                        (category) => DropdownMenuItem<Supplier>(
+                          value: category,
+                          child: Text(category.name),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (supplier) {
+                    setState(() {
+                      if (supplier == suppliersList[0]) {
+                        filterSupplier = null;
+                      } else {
+                        filterSupplier = supplier;
+                      }
+                    });
+                  },
+                ),
               ],
             ),
           ),

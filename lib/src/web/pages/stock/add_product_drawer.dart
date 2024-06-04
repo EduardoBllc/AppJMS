@@ -1,12 +1,13 @@
 import 'package:app_jms/constants.dart';
 import 'package:app_jms/models/stock/supplier.dart';
 import 'package:app_jms/services/utils.dart';
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:date_field/date_field.dart';
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:provider/provider.dart';
+
 import '../../../../models/utils/enums/category.dart';
 import '../../../../models/utils/enums/metal.dart';
 import '../../../../models/utils/enums/modality.dart';
@@ -32,9 +33,11 @@ class _AddProductDrawerState extends State<AddProductDrawer> {
   late DateTime boughtDate;
 
   final CurrencyTextInputFormatter moneyFormatter = CurrencyTextInputFormatter(
-    locale: 'pt-br',
-    decimalDigits: 2,
-    symbol: 'R\$',
+    NumberFormat.currency(
+      locale: 'pt-br',
+      decimalDigits: 2,
+      symbol: 'R\$',
+    ),
   );
 
   late Supplier supplier;
@@ -126,6 +129,7 @@ class _AddProductDrawerState extends State<AddProductDrawer> {
                               icon: const Icon(Icons.texture_outlined),
                               onSelected: (newMetal) {
                                 metal = newMetal!;
+                                print(metal);
                               },
                               validator: (value) {
                                 if (value == null) {
@@ -144,6 +148,7 @@ class _AddProductDrawerState extends State<AddProductDrawer> {
                               flex: 5,
                               onSelected: (newModality) {
                                 modality = newModality!;
+                                print(modality);
                               },
                               validator: (value) {
                                 if (value == null) {
@@ -162,8 +167,7 @@ class _AddProductDrawerState extends State<AddProductDrawer> {
                             child: DropdownProductFormField<Supplier>(
                               icon: const Icon(Icons.factory_outlined),
                               labelText: 'Fábrica',
-                              list: Provider.of<ShowcaseManager>(context)
-                                  .supplierList,
+                              list: Provider.of<ShowcaseManager>(context).supplierList,
                               onSelected: (selectedSupplier) {
                                 supplier = selectedSupplier!;
                               },
@@ -195,12 +199,11 @@ class _AddProductDrawerState extends State<AddProductDrawer> {
                           Expanded(
                             child: DateTimeFormField(
                               mode: DateTimeFieldPickerMode.date,
-                              initialDate: DateTime.now(),
+                              initialValue: DateTime.now(),
                               dateFormat: DateFormat('dd/MM/yyyy'),
-                              firstDate: DateTime.now()
-                                  .subtract(const Duration(days: 60)),
+                              firstDate: DateTime.now().subtract(const Duration(days: 60)),
                               lastDate: DateTime.now(),
-                              dateTextStyle: TextStyle(
+                              style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.grey.shade700,
                               ),
@@ -222,8 +225,10 @@ class _AddProductDrawerState extends State<AddProductDrawer> {
                                   ),
                                 ),
                               ),
-                              onDateSelected: (date) {
-                                boughtDate = date;
+                              onChanged: (date) {
+                                if (date != null) {
+                                  boughtDate = date;
+                                }
                               },
                               validator: (date) {
                                 if (date == null) {
@@ -303,8 +308,7 @@ class _AddProductDrawerState extends State<AddProductDrawer> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.sizeOf(context).height * 0.1),
+                padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height * 0.1),
                 child: RoundedMaterialButton(
                   elevation: 3,
                   textStyle: TextStyle(
@@ -313,10 +317,10 @@ class _AddProductDrawerState extends State<AddProductDrawer> {
                   ),
                   color: kCreamColor,
                   text: 'Cadastrar',
-                  onTap: () {
+                  onTap: () async {
                     if (_productFormKey.currentState!.validate()) {
-                      Provider.of<ShowcaseManager>(context, listen: false)
-                          .createProduct(
+                      String? productCreation =
+                          await Provider.of<ShowcaseManager>(context, listen: false).createProduct(
                         supplier: supplier,
                         supplierCode: supplierCode,
                         category: category,
@@ -325,10 +329,16 @@ class _AddProductDrawerState extends State<AddProductDrawer> {
                         aVista: vista / 100,
                         aPrazo: prazo / 100,
                         boughtDate: boughtDate,
+                        metal: metal,
+                        modality: modality,
                       );
+                      if (!mounted) return;
                       Navigator.pop(context);
-                      showSnackBar(
-                          context: context, message: 'Peça cadastrada');
+                      if (productCreation == null) {
+                        showSnackBar(context: context, message: 'Peça cadastrada');
+                      } else {
+                        showSnackBar(color: Colors.red, context: context, message: 'Erro ao cadastrar peça');
+                      }
                     }
                   },
                 ),

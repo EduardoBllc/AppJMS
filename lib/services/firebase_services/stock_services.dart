@@ -30,6 +30,8 @@ class FirebaseStockServices extends FirebaseServices {
     log('Registrando nova peça na Firestore');
 
     Product newProduct = Product(
+      metal: metal,
+      modality: modality,
       id: newProductId!,
       supplier: supplier,
       supplierCode: supplierCode,

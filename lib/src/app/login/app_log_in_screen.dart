@@ -1,9 +1,10 @@
 import 'package:app_jms/services/firebase_services/authentication_services.dart';
 import 'package:app_jms/src/shared/components/loading_widget.dart';
 import 'package:flutter/material.dart';
+
 import '../../../constants.dart';
-import 'components/log_in_field.dart';
 import '../shared/scaffold_components/show_snack_bar.dart';
+import 'components/log_in_field.dart';
 import 'register_modal.dart';
 
 class AppLogInScreen extends StatefulWidget {
@@ -31,8 +32,9 @@ class _AppLogInScreenState extends State<AppLogInScreen> {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: Center(
-          child: !_loading
-              ? Column(
+          child: _loading
+              ? const CircularLoading()
+              : Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -115,8 +117,7 @@ class _AppLogInScreenState extends State<AppLogInScreen> {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                         backgroundColor: Colors.black,
                         textStyle: const TextStyle(
                           fontSize: 20,
@@ -134,9 +135,7 @@ class _AppLogInScreenState extends State<AppLogInScreen> {
                           });
                           String email = _emailController.text;
                           String password = _passwordController.text;
-                          FirebaseAuthServices.logInUser(
-                                  email: email, password: password)
-                              .then((String? error) {
+                          FirebaseAuthServices.logInUser(email: email, password: password).then((String? error) {
                             if (error != null) {
                               setState(() {
                                 _loading = false;
@@ -147,10 +146,7 @@ class _AppLogInScreenState extends State<AppLogInScreen> {
                               } else {
                                 formattedError = error;
                               }
-                              showSnackBar(
-                                  context: context,
-                                  message: formattedError,
-                                  color: Colors.red);
+                              showSnackBar(context: context, message: formattedError, color: Colors.red);
                             } else {
                               Navigator.pushNamed(context, '/app/menu');
                             }
@@ -174,8 +170,7 @@ class _AppLogInScreenState extends State<AppLogInScreen> {
                       child: const Text('Entrar'),
                     ),
                   ],
-                )
-              : const CircularLoading(),
+                ),
         ),
       ),
     );

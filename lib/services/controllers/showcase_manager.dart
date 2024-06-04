@@ -13,6 +13,7 @@ class ShowcaseManager extends ChangeNotifier {
 
   final List<Product> _productsList = [];
   final List<Supplier> _supplierList = [
+    Supplier(name: 'Nenhum'),
     Supplier(name: 'Condor'),
     Supplier(name: 'Poli'),
     Supplier(name: 'Brilhare'),
@@ -60,7 +61,7 @@ class ShowcaseManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> createProduct({
+  Future<String?> createProduct({
     required Supplier supplier,
     required String supplierCode,
     Modality modality = Modality.adult,
@@ -89,11 +90,12 @@ class ShowcaseManager extends ChangeNotifier {
       if (newProduct != null) {
         _productsList.add(newProduct);
         notifyListeners();
+        return null;
       } else {
         throw Exception('Erro ao registrar produto');
       }
     } catch (e) {
-      log(e.toString());
+      return e.toString();
     }
   }
 

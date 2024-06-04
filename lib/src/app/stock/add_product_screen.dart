@@ -1,13 +1,15 @@
 import 'dart:developer';
+
 import 'package:app_jms/constants.dart';
 import 'package:app_jms/models/stock/supplier.dart';
 import 'package:app_jms/services/utils.dart';
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:date_field/date_field.dart';
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:provider/provider.dart';
+
 import '../../../models/utils/enums/category.dart';
 import '../../../models/utils/enums/metal.dart';
 import '../../../models/utils/enums/modality.dart';
@@ -34,8 +36,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   late DateTime boughtDate;
 
-  final CurrencyTextInputFormatter moneyFormatter = CurrencyTextInputFormatter(
-      locale: 'pt-br', decimalDigits: 2, symbol: 'R\$');
+  final CurrencyTextInputFormatter moneyFormatter =
+      CurrencyTextInputFormatter(NumberFormat.currency(locale: 'pt-br', decimalDigits: 2, symbol: 'R\$'));
 
   late Supplier supplier;
   late Category category;
@@ -154,8 +156,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             child2: DropdownProductFormField<Supplier>(
                               icon: const Icon(Icons.factory_outlined),
                               labelText: 'Fábrica',
-                              list: Provider.of<ShowcaseManager>(context)
-                                  .supplierList,
+                              list: Provider.of<ShowcaseManager>(context).supplierList,
                               onSelected: (selectedSupplier) {
                                 supplier = selectedSupplier!;
                               },
@@ -242,12 +243,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 width: MediaQuery.sizeOf(context).width * 0.5,
                                 child: DateTimeFormField(
                                   mode: DateTimeFieldPickerMode.date,
-                                  initialDate: DateTime.now(),
+                                  initialValue: DateTime.now(),
                                   dateFormat: DateFormat('dd/MM/yyyy'),
-                                  firstDate: DateTime.now()
-                                      .subtract(const Duration(days: 60)),
+                                  firstDate: DateTime.now().subtract(const Duration(days: 60)),
                                   lastDate: DateTime.now(),
-                                  dateTextStyle: TextStyle(
+                                  style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.grey.shade700,
                                   ),
@@ -269,8 +269,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                       ),
                                     ),
                                   ),
-                                  onDateSelected: (date) {
-                                    boughtDate = date;
+                                  onChanged: (date) {
+                                    if (date != null) {
+                                      boughtDate = date;
+                                    }
                                   },
                                   validator: (date) {
                                     if (date == null) {
@@ -305,9 +307,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   log('$prazo');
                                   log(boughtDate.toString());
 
-                                  Provider.of<ShowcaseManager>(context,
-                                          listen: false)
-                                      .createProduct(
+                                  Provider.of<ShowcaseManager>(context, listen: false).createProduct(
                                     supplier: supplier,
                                     supplierCode: supplierCode,
                                     category: category,
@@ -318,9 +318,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                     boughtDate: boughtDate,
                                   );
                                   Navigator.pop(context);
-                                  showSnackBar(
-                                      context: context,
-                                      message: 'Peça cadastrada');
+                                  showSnackBar(context: context, message: 'Peça cadastrada');
                                 }
                               },
                             ),
