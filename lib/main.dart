@@ -1,7 +1,7 @@
 import 'package:app_jms/services/controllers/connection_provider.dart';
 import 'package:app_jms/services/controllers/customers_caretaker.dart';
-import 'package:app_jms/services/login_router.dart';
 import 'package:app_jms/services/controllers/showcase_manager.dart';
+import 'package:app_jms/services/login_router.dart';
 import 'package:app_jms/src/app/login/app_log_in_screen.dart';
 import 'package:app_jms/src/app/menu/app_menu_screen.dart';
 import 'package:app_jms/src/app/stock/add_product_screen.dart';
@@ -10,10 +10,11 @@ import 'package:app_jms/src/web/menu/web_menu_page.dart';
 import 'package:app_jms/src/web/pages/customers/customers_page.dart';
 import 'package:app_jms/src/web/pages/financial/sales_page.dart';
 import 'package:app_jms/src/web/pages/stock/stock_page.dart';
-import 'package:flutter/material.dart';
-import 'constants.dart';
-import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'constants.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -29,12 +30,9 @@ class JmsApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<ShowcaseManager>(
-            create: (_) => ShowcaseManager()),
-        ChangeNotifierProvider<ConnectionProvider>(
-            create: (_) => ConnectionProvider()),
-        ChangeNotifierProvider<CustomersCaretaker>(
-            create: (_) => CustomersCaretaker()),
+        ChangeNotifierProvider<ShowcaseManager>(create: (_) => ShowcaseManager()),
+        ChangeNotifierProvider<ConnectionProvider>(create: (_) => ConnectionProvider()),
+        ChangeNotifierProvider<CustomersCaretaker>(create: (_) => CustomersCaretaker()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -12,55 +12,73 @@ class TextProductFormField extends StatelessWidget {
     this.onChanged,
     this.flex = 1,
     this.validator,
+    this.required = false,
+    this.readOnly = false,
     this.autovalidateMode = AutovalidateMode.onUserInteraction,
     this.icon,
     this.inputFormatters,
+    this.decoration,
+    this.validationRefusedMessage,
+    this.suffix,
+    this.controller,
   });
 
   final String labelText;
   final String? hintText;
   final void Function(String?)? onChanged;
+  final bool required;
   final String? Function(String?)? validator;
   final int flex;
   final AutovalidateMode autovalidateMode;
   final Icon? icon;
   final List<TextInputFormatter>? inputFormatters;
+  final InputDecoration? decoration;
+  final String? validationRefusedMessage;
+  final bool readOnly;
+  final Widget? suffix;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
+      onChanged: onChanged,
+      autovalidateMode: autovalidateMode,
+      inputFormatters: inputFormatters,
+      readOnly: readOnly,
       style: TextStyle(
         color: Colors.grey.shade700,
       ),
-      decoration: InputDecoration(
-        labelText: labelText,
-        hintText: hintText,
-        icon: icon,
-        labelStyle: TextStyle(
-          color: Colors.grey.shade700,
-        ),
-        iconColor: kColorScheme.onPrimary,
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.grey.shade700,
-          ),
-        ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: kColorScheme.onPrimary,
-          ),
-        ),
-      ),
-      onChanged: onChanged,
-      autovalidateMode: autovalidateMode,
       validator: validator ??
-          (value) {
-            if (value != null && value.isEmpty) {
-              return 'Preencha este campo';
-            }
-            return null;
-          },
-      inputFormatters: inputFormatters,
+          (required
+              ? (value) {
+                  if (value != null && value.isEmpty) {
+                    return validationRefusedMessage ?? 'Preencha este campo';
+                  }
+                  return null;
+                }
+              : null),
+      decoration: decoration ??
+          InputDecoration(
+            labelText: labelText,
+            hintText: hintText,
+            icon: icon,
+            suffixIcon: suffix,
+            labelStyle: TextStyle(
+              color: Colors.grey.shade700,
+            ),
+            iconColor: kColorScheme.onPrimary,
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.grey.shade700,
+              ),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: kColorScheme.onPrimary,
+              ),
+            ),
+          ),
     );
   }
 }

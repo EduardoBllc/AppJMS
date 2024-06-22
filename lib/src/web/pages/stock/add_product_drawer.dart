@@ -19,16 +19,19 @@ import 'components/product_form_fields.dart';
 class AddProductDrawer extends StatefulWidget {
   const AddProductDrawer({super.key});
 
-  static const String id = '/menu/add';
+  static const String id = '/estoque/add';
 
   @override
   State<AddProductDrawer> createState() => _AddProductDrawerState();
 }
 
 class _AddProductDrawerState extends State<AddProductDrawer> {
-  String description = '', supplierCode = '';
+  String description = '';
+  String supplierCode = '';
 
-  double cost = 0.0, vista = 0.0, prazo = 0.0;
+  double cost = 0.0;
+  double vista = 0.0;
+  double prazo = 0.0;
 
   late DateTime boughtDate;
 
@@ -51,7 +54,7 @@ class _AddProductDrawerState extends State<AddProductDrawer> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      width: MediaQuery.sizeOf(context).width * 0.4,
+      width: MediaQuery.sizeOf(context).width * 0.5,
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Container(
@@ -310,12 +313,12 @@ class _AddProductDrawerState extends State<AddProductDrawer> {
               Padding(
                 padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height * 0.1),
                 child: RoundedMaterialButton(
-                  elevation: 3,
+                  elevation: 2,
                   textStyle: TextStyle(
-                    color: kColorScheme.onPrimary,
+                    color: Colors.grey.shade700,
                     fontSize: 30,
                   ),
-                  color: kCreamColor,
+                  color: Colors.white,
                   text: 'Cadastrar',
                   onTap: () async {
                     if (_productFormKey.currentState!.validate()) {

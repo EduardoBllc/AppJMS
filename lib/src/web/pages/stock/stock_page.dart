@@ -1,14 +1,15 @@
 import 'package:app_jms/constants.dart';
+import 'package:app_jms/models/stock/stock_models.dart';
 import 'package:app_jms/src/web/pages/stock/add_product_drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:app_jms/models/stock/stock_models.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../models/utils/stock_enums.dart';
 import '../../../../services/controllers/showcase_manager.dart';
 import '../../shared/web_default_scaffold.dart';
 import 'components/filter_dropdown.dart';
 import 'components/product_grid_tile.dart';
-import '../../../../models/utils/stock_enums.dart';
 
 class StockPage extends StatefulWidget {
   const StockPage({super.key});
@@ -48,13 +49,27 @@ class _StockPageState extends State<StockPage> {
       scaffoldKey: _scaffoldKey,
       endDrawer: const AddProductDrawer(),
       floatingActionButton: SpeedDial(
+        overlayColor: Colors.black,
+        overlayOpacity: 0.2,
+        spaceBetweenChildren: 10,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
         onPress: () {
           _scaffoldKey.currentState!.openEndDrawer();
         },
-        child: const Icon(
+        children: [
+          SpeedDialChild(
+            child: const Icon(Icons.shopping_bag_outlined),
+            label: 'Único',
+          ),
+          SpeedDialChild(
+            child: const Icon(Icons.dashboard_outlined),
+            label: 'Em Lote',
+          ),
+        ],
+        child: Icon(
+          color: Colors.amber.shade200,
           Icons.add,
           size: 40,
         ),
@@ -66,10 +81,7 @@ class _StockPageState extends State<StockPage> {
             decoration: BoxDecoration(
               color: kCreamColor,
               boxShadow: const [
-                BoxShadow(
-                    color: Color(0x3f000000),
-                    offset: Offset(0, 2),
-                    blurRadius: 2),
+                BoxShadow(color: Color(0x3f000000), offset: Offset(0, 2), blurRadius: 2),
               ],
             ),
             child: Row(

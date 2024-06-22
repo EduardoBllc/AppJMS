@@ -88,9 +88,7 @@ NavigationBarThemeData kNavigationBarTheme = NavigationBarThemeData(
   iconTheme: MaterialStateProperty.resolveWith<IconThemeData>(
     (Set<MaterialState> states) {
       return IconThemeData(
-        color: states.contains(MaterialState.selected)
-            ? kColorScheme.primary
-            : kColorScheme.onPrimary,
+        color: states.contains(MaterialState.selected) ? kColorScheme.primary : kColorScheme.onPrimary,
       );
     },
   ),
@@ -101,8 +99,7 @@ BottomAppBarTheme kBottomAppBarTheme = const BottomAppBarTheme(
   shape: CircularNotchedRectangle(),
 );
 
-NavigationRailThemeData kNavigationRailThemeData =
-    const NavigationRailThemeData();
+NavigationRailThemeData kNavigationRailThemeData = const NavigationRailThemeData();
 
 FloatingActionButtonThemeData kFABTheme = FloatingActionButtonThemeData(
   backgroundColor: Colors.grey.shade800,

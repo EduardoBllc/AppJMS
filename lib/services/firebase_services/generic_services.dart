@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -18,13 +19,12 @@ abstract class FirebaseServices {
     log('Mensagem: ${e.message}');
   }
 
-  static Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>?>
-      getAllCollectionDocs(String collectionName) async {
+  static Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>?> getAllCollectionDocs(String collectionName) async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     log('Buscando todos os documentos da coleçao $collectionName');
     try {
       var allDocs = await firestore.collection(collectionName).get();
-      log('Foram encontrados ${allDocs.docs.length} documentos da tanela $collectionName');
+      log('Foram encontrados ${allDocs.docs.length} documentos da tabela $collectionName');
       return allDocs.docs;
     } on FirebaseException catch (e) {
       log('Erro ao procurar documentos');
@@ -33,8 +33,7 @@ abstract class FirebaseServices {
     }
   }
 
-  Future<CollectionReference<Map<String, dynamic>>?>
-      accessControlTable() async {
+  Future<CollectionReference<Map<String, dynamic>>?> accessControlTable() async {
     log('Entrando na tabela de controle');
     try {
       return firestore.collection('controle');
@@ -74,12 +73,12 @@ abstract class FirebaseServices {
   }
 
   Future<String?> registerObject<T extends Registerable>(
-      Mappable object, String collection, int id) async {
+    Mappable object,
+    String collection,
+    int id,
+  ) async {
     try {
-      await firestore
-          .collection(collection)
-          .doc(id.toString())
-          .set(object.toMap);
+      await firestore.collection(collection).doc(id.toString()).set(object.toMap);
       await stepInCode(collection);
       if (object is Loggable) {
         log('Objeto do tipo $T: ${object.log}');

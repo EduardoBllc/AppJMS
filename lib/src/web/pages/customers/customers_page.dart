@@ -2,6 +2,7 @@ import 'package:app_jms/models/financial/sale.dart';
 import 'package:app_jms/models/utils/enums/payment_type.dart';
 import 'package:app_jms/services/controllers/customers_caretaker.dart';
 import 'package:app_jms/services/controllers/showcase_manager.dart';
+import 'package:app_jms/src/web/pages/customers/add_costumer_drawer.dart';
 import 'package:app_jms/src/web/pages/customers/components/customer_card.dart';
 import 'package:app_jms/src/web/shared/web_default_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -10,15 +11,20 @@ import 'package:provider/provider.dart';
 import '../../../../models/customers/customer.dart';
 import '../../../../models/stock/product.dart';
 
-class CustomersPage extends StatelessWidget {
+class CustomersPage extends StatefulWidget {
   const CustomersPage({super.key});
 
   static String id = '/clientes';
 
   @override
-  Widget build(BuildContext context) {
-    print(MediaQuery.sizeOf(context).width);
+  State<CustomersPage> createState() => _CustomersPageState();
+}
 
+class _CustomersPageState extends State<CustomersPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  Widget build(BuildContext context) {
     List<Customer> customerList = Provider.of<CustomersCaretaker>(context).customersList;
 
     List<Product> productList = Provider.of<ShowcaseManager>(context).productList;
@@ -37,6 +43,21 @@ class CustomersPage extends StatelessWidget {
     );
 
     return WebScaffold(
+      scaffoldKey: _scaffoldKey,
+      endDrawer: const AddCustomerDrawer(),
+      floatingActionButton: FloatingActionButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        onPressed: () {
+          _scaffoldKey.currentState!.openEndDrawer();
+        },
+        child: Icon(
+          color: Colors.amber.shade200,
+          Icons.add,
+          size: 40,
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Row(
